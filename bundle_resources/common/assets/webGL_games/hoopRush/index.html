@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Cocos Creator | Hoop Rush</title>
+
+  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+  <meta name="viewport"
+    content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1" />
+
+  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- force webkit on 360 -->
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <!-- force edge on IE -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes" />
+  <meta name="x5-fullscreen" content="true" />
+  <meta name="360-fullscreen" content="true" />
+
+  <!-- force screen orientation on some browser -->
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="x5-orientation" content="portrait">
+
+  <!--fix fireball/issues/3568 -->
+  <!--<meta name="browsermode" content="application">-->
+  <meta name="x5-page-mode" content="app">
+
+  <!--<link rel="apple-touch-icon" href=".png" />-->
+  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+  <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+
+  <!-- Polyfills bundle. -->
+  <script src="src/polyfills.bundle.js" charset="utf-8"> </script>
+
+  <!-- SystemJS support. -->
+  <script src="src/system.bundle.js" charset="utf-8"> </script>
+
+  <!-- Import map -->
+  <script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
+
+  <script>
+    System.import('./index.js').catch(function (err) { console.error(err); })
+  </script>
+
+  <script>
+    var local = true
+
+		function makeParams(params) {
+			return `{"is_local" : ${local}, "params" : ${params}}`;
+		}		
+
+    function onSandboxMessage(evt) {
+      console.log(evt)
+      let data = JSON.parse(evt.data);
+
+      if (data.method == "StartGame") {
+        console.log(`Seed: ${data.seed}`);
+        console.log(`Bot: ${data.runBot}`);
+        __StartGame(evt.data);
+      }
+
+      if (data.method == "StopGame") {
+        __StopGame();
+      }
+
+      if (data.method == "OnCmd") {
+        console.log(`OnApply: ${data.cmd}`);
+        __ApplyCmd(data.cmd);
+      }
+    }
+
+    function __StartGame(startCmd) {
+      let cmd = JSON.parse(startCmd);
+      GameController.startGame(cmd.type, cmd.seed, cmd.is_master, cmd.is_first_launch, cmd.bot_skill);
+    }
+
+    function __StopGame() {
+      GameController.gameStop();
+    }
+
+    function __ApplyCmd(cmd) {
+      let data = JSON.parse(cmd);
+      console.log(`OnApplymethod: ${data.method}`);
+      switch (data.method) {
+        case "launch_torus":
+          GameController.launchOpponentTorus(data.dir);
+          break;
+        default:
+          console.log(`Cmd not found`);
+      }
+    }
+
+    function blitzOnLaunchOpponentTorus(dir) {
+      
+			let data = {
+				method : "launch_torus",
+				dir : dir
+			}
+
+			let message = {
+				method : 'OnCmd',
+				cmd : JSON.stringify(data)
+			}
+
+			let messageJson = JSON.stringify(message);
+			console.log(`MessageJson: ${messageJson}`);
+			//parent.postMessage(messageJson); //for test on stand
+
+			if (window._OnCommand !== undefined) {
+				window._OnCommand.postMessage(makeParams(`${messageJson}`));
+			}
+    }
+
+    function blitzOnSceneLoaded() {
+      console.log(`OnSceneLoaded`);
+      if (window._OnSceneLoaded !== undefined) {
+        window._OnSceneLoaded.postMessage(makeParams('0'));
+      }
+    }
+
+    function blitzOnScore(score) {
+      console.log(`OnScore: ${score}`);
+
+			if (window._OnNewScore !== undefined) {
+				window._OnNewScore.postMessage(makeParams(`${score}`));
+			}
+    }
+
+    function blitzOnNewBotScoreOneWorld(score) {
+      console.log(`OnBotScore: ${score}`);
+
+      if (window._OnBotScoreOneWorld !== undefined) {
+        window._OnBotScoreOneWorld.postMessage(makeParams(`${score}`));
+      }
+    }
+    
+		function blitzOnChangeHealth(health) {
+			if (window._OnChangeHealth !== undefined) {
+				window._OnChangeHealth.postMessage(makeParams(`${health}`));
+			}
+		}
+
+    function blitzOnUX(name) {
+      console.log(`OnUX: ${name}`);
+
+      if (window._OnUX !== undefined) {
+        window._OnUX.postMessage(makeParams(`${name}`));
+      }
+    }
+
+    function blitzOnGameOver() {
+      console.log(`OnGameOver`);
+
+      if (window._OnGameFinished !== undefined) {
+        window._OnGameFinished.postMessage(makeParams(''));
+      }
+    }
+
+    function blitzOnBotGameOverOneWorld() {
+      console.log(`OnBotGameOverOneWorld`);
+
+      if (window._OnBotGameFinishedOneWorld !== undefined) {
+        window._OnBotGameFinishedOneWorld.postMessage(makeParams(''));
+      }
+    }
+
+    window.addEventListener("message", onSandboxMessage, false);
+  </script>
+</body>
+
+</html>

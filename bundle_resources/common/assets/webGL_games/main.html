@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  </head>
+  <style>
+    .game_frame {
+        left: 0px;
+        top: 0px;
+        width: 0px;
+        height: 0px;
+        border-width: 0px;
+        position: absolute;
+        background-color: #1D3349;
+    }
+  </style>
+  <body style="text-align: center; margin: 0 !important; padding: 0 !important;">
+    <iframe class="game_frame" id="instance1"></iframe>
+    <iframe class="game_frame" id="instance2"></iframe>
+    
+    <script>
+        var instance1 = document.getElementById("instance1");
+        var instance2 = document.getElementById("instance2");
+
+        placeInstance = function(pos, instance) {
+            var windowWidth = window.outerWidth;
+		    var windowHeight = window.outerHeight;
+            
+            instance.style.left = (pos.left * windowWidth) + "px";
+            instance.style.width = (pos.width * windowWidth) + "px";
+            instance.style.top = (pos.top * windowHeight) + "px";
+            instance.style.height = (pos.height * windowHeight) + "px";
+        }
+
+        __Start = function(params) {
+            placeInstance(params.local_instance.pos, instance1)
+            
+            instance1.sandbox = 'allow-same-origin allow-scripts';
+            instance1.src = params.game_url + '?local=true'
+
+            if (params.has_remote_view) {
+                placeInstance(params.remote_instance.pos, instance2)
+                
+                instance2.sandbox = 'allow-same-origin allow-scripts';
+                instance2.src = params.game_url + '?local=false'
+            }
+        }
+
+        __Execute = function(local, method, params) {
+            var instance = local ? instance1 : instance2;
+            instance.contentWindow[method](params);
+        }
+
+        var test_params = {
+            game_url : 'ddShooter/index.html',
+            has_remote_view : true,
+            local_instance : {
+                pos : {
+                    left : 0.1,
+                    top : 0.3,
+                    width : 0.8,
+                    height : 0.5,
+                }
+            },
+            remote_instance : {
+                pos : {
+                    left : 0.4,
+                    top : 0.1,
+                    width : 0.2,
+                    height : 0.15,
+                }
+            },
+        }
+
+        //__Start(test_params)
+    </script>
+    </body>
+</html>

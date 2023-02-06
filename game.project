@@ -1,0 +1,40 @@
+[bootstrap]
+main_collection = /example/maxsdk_example.collectionc
+
+[input]
+game_binding = /input/game.input_bindingc
+
+[script]
+shared_state = 1
+
+[display]
+width = 720
+height = 1280
+dynamic_orientation = 1
+
+[project]
+title = WebViewTest
+dependencies#0 = https://github.com/andsve/dirtylarry/archive/master.zip
+
+[library]
+include_dirs = extension-maxsdk
+
+[applovin]
+sdk_key_android = 8xn1GGKOTXmyX427ni14W4rNlh1TMTFlZKP1speEL3l4Q4ec6aZ0M5IIVtkl5SNIucXNGq4aIQf98BO9iQpOir
+admob_appid_android = ca-app-pub-4037320283832546~7018464256
+
+[android]
+package = com.arenum.webviewtest
+minimum_sdk_version = 19
+immersive_mode = 1
+manifest = /manifests/AndroidManifest.xml
+
+[render]
+clear_color_red = 0.1
+clear_color_green = 0.1
+clear_color_blue = 0.1
+
+[ios]
+bundle_identifier = com.arenum.webviewtest
+infoplist = /manifests/Info.plist
+

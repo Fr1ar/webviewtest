@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:compileSdkVersion="28"
+    android:compileSdkVersionCodename="9"
+    package="{{android.package}}"
+    android:versionCode="{{android.version_code}}"
+    android:versionName="{{project.version}}"
+    platformBuildVersionCode="28"
+    platformBuildVersionName="9">
+
+    <uses-feature
+        android:glEsVersion="0x20000"
+        android:required="true" />
+
+    <uses-sdk 
+        android:minSdkVersion="{{android.minimum_sdk_version}}" 
+        android:targetSdkVersion="{{android.target_sdk_version}}"
+    />    
+
+    <queries>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https" />
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.SEND" />
+        <data android:mimeType="*/*" />
+      </intent>
+    </queries>
+
+<!--    <application-->
+<!--    {{#has-icons?}}-->
+<!--    android:icon="@drawable/icon"-->
+<!--    {{/has-icons?}}-->
+<!--    android:label="{{project.title}}"-->
+<!--    android:debuggable="{{android.debuggable}}"-->
+<!--    android:name="com.blitz.hiddenwebview.CurrentActivityAwareApplication"-->
+<!--    android:hasCode="true"-->
+<!--    android:usesCleartextTraffic="true">-->
+
+    <application
+        android:label="WebViewTest"
+        android:debuggable="true"
+        android:name="com.blitz.hiddenwebview.CurrentActivityAwareApplication"
+        android:hasCode="true"
+        android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="1074161280.000000" />
+
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+
+        <activity
+            android:label="{{project.title}}"
+            android:name="com.dynamo.android.DefoldActivity"
+            android:launchMode="singleTop"
+            android:exported="false"
+            android:screenOrientation="{{orientation-support}}"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="{{exe-name}}" />
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:label="{{project.title}}"
+            android:name="com.blitz.hiddenwebview.FakeWebViewActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:label="{{project.title}}"
+            android:screenOrientation="{{orientation-support}}"
+            android:name="com.blitz.hiddenwebview.FakeWebViewActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.android.dynamic.apk.fused.modules"
+            android:value="base" />
+        
+        <receiver android:name = "com.amazon.device.iap.ResponseReceiver" android:permission = "com.amazon.inapp.purchasing.Permission.NOTIFY" android:exported="true">
+            <intent-filter>
+                <action android:name = "com.amazon.inapp.purchasing.NOTIFY" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+</manifest>
+
+
+
+
+
+

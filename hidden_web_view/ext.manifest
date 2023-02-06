@@ -1,0 +1,23 @@
+name: hidden_web_view
+
+platforms:
+  x86_64-osx:
+    context:
+        frameworks: ["WebKit"]
+        flags:      ["-std=c++11"]
+        libs:       ["z","c++"]
+
+  arm64-ios:
+    context:
+        frameworks: ["WebKit"]
+        flags:      ["-std=c++11"]
+
+  armv7-ios:
+    context:
+        frameworks: ["WebKit"]
+        flags:      ["-std=c++11"]
+
+  x86_64-ios:
+    context:
+        frameworks: ["WebKit"]
+        flags:      ["-std=c++11"]

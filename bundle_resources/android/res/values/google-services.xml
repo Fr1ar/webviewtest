@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id" xmlns:tools="http://schemas.android.com/tools">
+  <string name="gcm_defaultSenderId" translatable="false">225403731647</string>
+  <string name="google_storage_bucket" translatable="false">blitz-43a25.appspot.com</string>
+  <string name="project_id" translatable="false">blitz-43a25</string>
+  <string name="google_api_key" translatable="false">AIzaSyADcMVv6MCk4o-SKujFmKSKlhocnslwJNk</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyADcMVv6MCk4o-SKujFmKSKlhocnslwJNk</string>
+  <string name="google_app_id" translatable="false">1:225403731647:android:08ab64ddc036f1cf69d00a</string>
+  <string name="default_web_client_id" translatable="false">225403731647-f8mmk258ct02gnmvdi1e1dicvuumr6cf.apps.googleusercontent.com</string>
+</resources>
