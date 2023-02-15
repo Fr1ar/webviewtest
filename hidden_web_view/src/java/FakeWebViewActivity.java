@@ -65,6 +65,8 @@ public class FakeWebViewActivity extends Activity {
     static CustomWebChromeClient customWebChromeClient;
     static CustomWebViewClient customWebViewClient;
 
+    public static final String TAG = "HiddenWebViewLog";
+
     //private static final long ACTIVITY_DETECT_DELAY_MS = 10;
     public static boolean webViewActive = false;
 
@@ -78,6 +80,9 @@ public class FakeWebViewActivity extends Activity {
         private int scriptId;
 
         public CustomWebChromeClient(FakeWebViewActivity webviewJNI) {
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.CustomWebChromeClient");
+
             this.webviewJNI = webviewJNI;
             reset(-1);
         }
@@ -89,6 +94,10 @@ public class FakeWebViewActivity extends Activity {
         @SuppressLint("DefaultLocale")
         @Override
         public boolean onConsoleMessage(ConsoleMessage msg) {
+
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.onConsoleMessage: " + msg.message());
+
             if (msg.messageLevel() == ConsoleMessage.MessageLevel.ERROR) {
                 webviewJNI.onScriptFailed(String.format("js:%d: %s", msg.lineNumber(), msg.message()), scriptId);
                 return true;
@@ -106,33 +115,54 @@ public class FakeWebViewActivity extends Activity {
         private int requestId;
 
         public void reset(int scriptId) {
+
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebViewClient.reset");
+
             this.requestId = scriptId;
             this.hasError = false;
         }
 
         public CustomWebViewClient(FakeWebViewActivity webviewJNI) {
             super();
+
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebViewClient");
+
+
             this.webviewJNI = webviewJNI;
             reset();
         }
 
         public void reset() {
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.reset");
+
             this.hasError = false;
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.shouldOverrideUrlLoading");
+
             webviewJNI.onPageLoading(url, requestId);
             return true;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.onPageFinished");
+
             webviewJNI.onPageFinished(url, requestId);
         }
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+            Log.d(FakeWebViewActivity.TAG, "CustomWebChromeClient.onReceivedError");
+
             if (!this.hasError) {
                 this.hasError = true;
                 webviewJNI.onReceivedError(failingUrl, description, requestId);
@@ -144,15 +174,34 @@ public class FakeWebViewActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "FakeWebViewActivity.onCreate starts");
+
         setDefaultContainer();
         openDefoldMainSurfaceActivity();
 
+
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+            new Runnable() {
+                public void run() {
+                    // openWebViewActivity();
+                }
+            },
+        5000);
+
+
         initWebView();
         updateFullscreenMode();
+
+        Log.d(TAG, "FakeWebViewActivity.onCreate ends");
     }
 
     private void updateFullscreenMode() {
+        Log.d(TAG, "FakeWebViewActivity.updateFullscreenMode");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            Log.d(TAG, "FakeWebViewActivity.updateFullscreenMode KITKAT");
+
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -162,6 +211,9 @@ public class FakeWebViewActivity extends Activity {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+
+            Log.d(TAG, "FakeWebViewActivity.updateFullscreenMode VERSION_CODES.P");
+
             WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
             layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             getWindow().setAttributes(layoutParams);
@@ -171,6 +223,9 @@ public class FakeWebViewActivity extends Activity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
+        Log.d(TAG, "FakeWebViewActivity.onWindowFocusChanged");
+
         if (hasFocus) {
             updateFullscreenMode();
         }
@@ -178,6 +233,9 @@ public class FakeWebViewActivity extends Activity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+
+        Log.d(TAG, "FakeWebViewActivity.onConfigurationChanged");
+
         super.onConfigurationChanged(newConfig);
         if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
             updateFullscreenMode();
@@ -186,15 +244,17 @@ public class FakeWebViewActivity extends Activity {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
+
+        Log.d(TAG, "FakeWebViewActivity.initWebView");
+
         htmlGameView = new WebView(this);
 
-        htmlGameView.setBackgroundColor(getResources().getColor(android.R.color.white, getResources().newTheme()));
+        htmlGameView.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark, getResources().newTheme()));
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
         );
-
         params.gravity = Gravity.CENTER;
 
         htmlGameView.setLayoutParams(params);
@@ -217,7 +277,10 @@ public class FakeWebViewActivity extends Activity {
             new JavaScriptInterface(
                 this, 
                 (type, data) -> {
-                  defoldWebViewInterface.onScriptCallback(type, data);
+                        
+                    Log.d(TAG, "JavaScriptInterface(type, data)");
+
+                    defoldWebViewInterface.onScriptCallback(type, data);
                 }
             ), 
             "defoldHandler"
@@ -232,9 +295,14 @@ public class FakeWebViewActivity extends Activity {
         htmlGameView.setVisibility(View.GONE);
 
         mainContainer.addView(htmlGameView, params);
+
+        Log.d(TAG, "FakeWebViewActivity.initWebView view added");
     }
 
     public static void acceptTouchEvents(int accept) {
+        
+        Log.d(TAG, "FakeWebViewActivity.acceptTouchEvents");
+
         if (touchInterceptorView == null) {
             return;
         }
@@ -244,9 +312,13 @@ public class FakeWebViewActivity extends Activity {
         WindowManager wm = CurrentActivityAwareApplication.currentlyOpenedActivity.getWindowManager();
 
         if (accept == 1) {
+            Log.d(TAG, "FakeWebViewActivity.acceptTouchEvents accept == 1");
+
             wm.removeViewImmediate(touchInterceptorView);
             wm.addView(touchInterceptorView, touchInterceptorViewParams);
         } else {
+            Log.d(TAG, "FakeWebViewActivity.acceptTouchEvents accept != 1");
+
             wm.removeViewImmediate(touchInterceptorView);
         }
     }
@@ -260,17 +332,29 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void executeScript(String js, int id) {
+        
+        Log.d(TAG, "FakeWebViewActivity.executeScript: " + js);
+
         htmlGameView.evaluateJavascript(js, value -> defoldWebViewInterface.onScriptFinished(value, id));
     }
 
     public static void loadGame(String gamePath, int id) {
+
+        Log.d(TAG, "FakeWebViewActivity.loadGame");
+
         customWebViewClient.reset(id);
         customWebChromeClient.reset(id);
 
-        htmlGameView.loadUrl("http://localhost:8808/" + gamePath);
+        // htmlGameView.loadUrl("http://localhost:8808/" + gamePath);
+
+        String strData = "<html><head></head><body><div style='color:red'>HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO</div></body></html>";
+        htmlGameView.loadData(strData, "text/html", "UTF-8");
     }
 
     public static void loadWebPage(String gamePath, int id) {
+
+        Log.d(TAG, "FakeWebViewActivity.loadWebPage");
+
         customWebViewClient.reset(id);
         customWebChromeClient.reset(id);
 
@@ -282,6 +366,9 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void changeVisibility(int visible) {
+
+        Log.d(TAG, "FakeWebViewActivity.changeVisibility visible = " + visible);
+
         webViewActive = visible == 1;
         htmlGameView.setVisibility(webViewActive ? View.VISIBLE : View.GONE);
 
@@ -294,6 +381,8 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void setTouchInterceptor(double height, double width, double x, double y) {
+        Log.d(TAG, "FakeWebViewActivity.setTouchInterceptor");
+
         if (touchInterceptorView != null) {
             WindowManager wm = CurrentActivityAwareApplication.currentlyOpenedActivity.getWindowManager();
             wm.removeViewImmediate(touchInterceptorView);
@@ -323,11 +412,17 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void setPositionAndSize(double height, double width, double x, double y) {
+        Log.d(TAG, "FakeWebViewActivity.setPositionAndSize height = " + height + ", width = " + width +
+            ", x = " + x + ", y = " + y);
+
         Display display = CurrentActivityAwareApplication.currentlyOpenedActivity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int screenWidth = size.x;
         int screenHeight = size.y;
+
+        Log.d(TAG, "FakeWebViewActivity.setPositionAndSize screenWidth = " + screenWidth + 
+            ", screenHeight = " + screenHeight);
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) htmlGameView.getLayoutParams();
         params.height = (int)(screenHeight * height);
@@ -340,6 +435,8 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void centerWebView() {
+        Log.d(TAG, "FakeWebViewActivity.centerWebView");
+
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) htmlGameView.getLayoutParams();
         params.gravity = Gravity.CENTER;
         params.setMargins(0, 0, 0, 0);
@@ -349,6 +446,8 @@ public class FakeWebViewActivity extends Activity {
     }
 
     public static void matchScreenSize() {
+        Log.d(TAG, "FakeWebViewActivity.matchScreenSize");
+
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
@@ -361,12 +460,16 @@ public class FakeWebViewActivity extends Activity {
     }
 
     private void setDefaultContainer() {
+        Log.d(TAG, "FakeWebViewActivity.setDefaultContainer");
+
         mainContainer = new FrameLayout(this);
-        mainContainer.setBackgroundColor(getResources().getColor(android.R.color.black, getResources().newTheme()));
+        mainContainer.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright, getResources().newTheme()));
         setContentView(mainContainer);
     }
 
     private void openDefoldMainSurfaceActivity() {
+        Log.d(TAG, "FakeWebViewActivity.openDefoldMainSurfaceActivity");
+
         try {
             Intent intent = new Intent(this, Class.forName("com.dynamo.android.DefoldActivity"));
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -374,13 +477,43 @@ public class FakeWebViewActivity extends Activity {
             overridePendingTransition(0, 0);
         } catch (Throwable e) {
             e.printStackTrace();
+
+            Log.e(TAG, "FakeWebViewActivity.openDefoldMainSurfaceActivity failed: " + e.getMessage());
         }
     }
 
+    private void openWebViewActivity() {
+        Log.d(TAG, "FakeWebViewActivity.openWebViewActivity");
+
+        try {
+            Intent intent = new Intent(this, Class.forName("com.blitz.hiddenwebview.FakeWebViewActivity"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } catch (Throwable e) {
+            e.printStackTrace();
+
+            Log.e(TAG, "FakeWebViewActivity.openWebViewActivity failed: " + e.getMessage());
+        }
+    }
+
+
     protected void onNewIntent(Intent intent) {
-        if (intent.getAction().equals(Intent.ACTION_MAIN)) {
+        Log.d(TAG, "FakeWebViewActivity.onNewIntent");
+
+        String action = intent.getAction();
+        if (action == null) {
+            Log.w(TAG, "FakeWebViewActivity.onNewIntent action is null");
+            super.onNewIntent(intent);
+            return;
+        }
+
+        if (action.equals(Intent.ACTION_MAIN)) {
+            Log.d(TAG, "FakeWebViewActivity.onNewIntent Intent.ACTION_MAIN");
             openDefoldMainSurfaceActivity();
         } else {
+            Log.d(TAG, "FakeWebViewActivity.onNewIntent onNewIntent");
+
             super.onNewIntent(intent);
         }
     }
@@ -388,6 +521,9 @@ public class FakeWebViewActivity extends Activity {
     @Override
     @SuppressLint("ClickableViewAccessibility")
     protected void onStart() {
+
+        Log.d(FakeWebViewActivity.TAG, "FakeWebViewActivity.ClickableViewAccessibility.onStart");
+
         super.onStart();
 
         // не работает с DefoldActivity
@@ -436,12 +572,18 @@ class JavaScriptInterface {
   private JavaScriptHandler handler;
 
   JavaScriptInterface(Activity activity, JavaScriptHandler handler) {
+
+    Log.d(FakeWebViewActivity.TAG, "JavaScriptInterface");
+
     сontext = activity;
     this.handler = handler;
   }
 
   @JavascriptInterface
   public void handle(String messageType, String payload) {
+
+    Log.d(FakeWebViewActivity.TAG, "JavaScriptInterface.handle");
+
     this.сontext.runOnUiThread(() -> {
       handler.handle(messageType, payload);
     });

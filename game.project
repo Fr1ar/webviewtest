@@ -14,10 +14,11 @@ dynamic_orientation = 1
 
 [project]
 title = WebViewTest
+bundle_resources = /bundle_resources
 dependencies#0 = https://github.com/andsve/dirtylarry/archive/master.zip
 
 [library]
-include_dirs = extension-maxsdk
+include_dirs = hidden_web_view
 
 [applovin]
 sdk_key_android = 8xn1GGKOTXmyX427ni14W4rNlh1TMTFlZKP1speEL3l4Q4ec6aZ0M5IIVtkl5SNIucXNGq4aIQf98BO9iQpOir
@@ -30,9 +31,10 @@ immersive_mode = 1
 manifest = /manifests/AndroidManifest.xml
 
 [render]
-clear_color_red = 0.1
-clear_color_green = 0.1
-clear_color_blue = 0.1
+clear_color_red = 0.0
+clear_color_green = 0.0
+clear_color_blue = 0.0
+clear_color_alpha = 0.0
 
 [ios]
 bundle_identifier = com.arenum.webviewtest
