@@ -57,15 +57,16 @@ function on_html_loaded()
     }
 
     local param_string = json.encode(params)
-    local touch_area_height = 0.6
+    local touch_area_height = 1
     
-    hidden_web_view.set_touch_interceptor_area(0, 0.3, 1, touch_area_height)
+    hidden_web_view.set_touch_interceptor_area(0, 0, 1, touch_area_height)
 
+    --[[
     local js = "document.write('<h2>Hello World!</h2><p>Have a nice day!</p>');"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
 
-    --[[
+    
     local js = "__Start(" .. param_string .. ")"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)

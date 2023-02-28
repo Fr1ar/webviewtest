@@ -52,21 +52,14 @@ public class CurrentActivityAwareApplication extends Application {
                 String activityName = getActivityName(activity);
                 Log.d(TAG, "CurrentActivityAwareApplication.makeTransparent: " + activityName);
                 
-                int color = Color.TRANSPARENT;
                 Window window = activity.getWindow();
-                window.setBackgroundDrawable(new ColorDrawable(color));
-                window.getDecorView().setBackgroundColor(color);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                View view = activity.findViewById(android.R.id.content);
-                view.setBackgroundDrawable(new ColorDrawable(color));
+                View view = window.getDecorView();
+                view.setBackgroundColor(Color.TRANSPARENT);
+                activity.findViewById(android.R.id.content).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-
-                View view2 = activity.findViewById(android.R.id.content);
-                view2.setBackgroundColor(color);
-                view2.getRootView().setBackgroundColor(color);
-
-                View view3 = window.getDecorView().findViewById(android.R.id.content);
-                view3.setBackgroundColor(color);
+                // window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             }
             
             @Override
