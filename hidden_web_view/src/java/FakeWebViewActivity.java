@@ -45,9 +45,24 @@ class TouchInterceptorView extends View {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (isAcceptingTouchEvents) {
-            FakeWebViewActivity.htmlGameView.dispatchTouchEvent(event);
+            dispatchModifiedMotionEvent(event);
         }
         return false;
+    }
+
+    protected boolean dispatchModifiedMotionEvent(MotionEvent event) {
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+        int offsetX = location[0];
+        int offsetY = location[1];
+        
+        MotionEvent hackedEvent = MotionEvent.obtain(event.getDownTime(),
+            event.getEventTime(), event.getAction(), event.getX() + offsetX,
+            event.getY() + offsetY, event.getMetaState());
+
+        boolean result = FakeWebViewActivity.htmlGameView.dispatchTouchEvent(hackedEvent);
+        hackedEvent.recycle();
+        return result;
     }
 }
 
@@ -395,16 +410,16 @@ public class FakeWebViewActivity extends Activity {
         int screenHeight = size.y;
 
         touchInterceptorView = new TouchInterceptorView(CurrentActivityAwareApplication.currentlyOpenedActivity);
-        touchInterceptorView.setBackground(new ColorDrawable(Color.TRANSPARENT));
+        touchInterceptorView.setBackground(new ColorDrawable(Color.RED)); // Color.TRANSPARENT
 
         touchInterceptorViewParams = new WindowManager.LayoutParams();
-        touchInterceptorViewParams.gravity = Gravity.TOP | Gravity.START;
+        touchInterceptorViewParams.gravity = Gravity.CENTER; // Gravity.TOP | Gravity.START;
         touchInterceptorViewParams.x = (int) dpToPx(screenWidth * x);
         touchInterceptorViewParams.y = (int) dpToPx(screenHeight * y);
         touchInterceptorViewParams.width = (int) dpToPx(screenWidth * width);
         touchInterceptorViewParams.height = (int) dpToPx(screenHeight * height);
         touchInterceptorViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        touchInterceptorViewParams.alpha = 0.0f;
+        touchInterceptorViewParams.alpha = 0.5f;
         touchInterceptorViewParams.format = PixelFormat.TRANSLUCENT;
 
         WindowManager wm = CurrentActivityAwareApplication.currentlyOpenedActivity.getWindowManager();
