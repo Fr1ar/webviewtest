@@ -1,38 +1,2185 @@
-System.register("chunks:///_virtual/BackgroundController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(e){"use strict";var t,r,o,n,i,l,a,s,u,c,h,p;return{setters:[function(e){t=e.applyDecoratedDescriptor,r=e.inheritsLoose,o=e.initializerDefineProperty,n=e.assertThisInitialized},function(e){i=e.cclegacy,l=e._decorator,a=e.Texture2D,s=e.Material,u=e.Color,c=e.MeshRenderer,h=e.Component},function(e){p=e.Constants}],execute:function(){var f,d,g,b,C,m,y,v,M;i._RF.push({},"ad494POf3hFr6R/5bz3tH2h","BackgroundController",void 0);var x=l.ccclass,T=l.property;e("BackgroundController",(f=x("BackgroundController"),d=T({type:a}),g=T(s),b=T({type:u}),f((y=t((m=function(e){function t(){for(var t,r=arguments.length,i=new Array(r),l=0;l<r;l++)i[l]=arguments[l];return t=e.call.apply(e,[this].concat(i))||this,o(t,"bgTextures",y,n(t)),o(t,"floorMaterial",v,n(t)),o(t,"floorColors",M,n(t)),t._mesh=void 0,t}r(t,e);var i=t.prototype;return i.onLoad=function(){var e;this._mesh=null!=(e=this.node.getComponentInChildren(c))?e:this.node.getComponent(c),this._mesh.enabled=!1},i.SpawnBG=function(){var e=p.RandomFixedSeed.Rand(this.bgTextures.length);this.setTexture(this._mesh,this.bgTextures[e]),this._mesh.enabled=!0,this.setMainColorMaterial(this.floorMaterial,this.floorColors[e]),2==e&&this.node.setPosition(0,-60,-410)},i.setTexture=function(e,t){var r;null==e||null==(r=e.getMaterial(0))||r.setProperty("mainTexture",t)},i.setMainColorMaterial=function(e,t){e.setProperty("mainColor",t)},t}(h)).prototype,"bgTextures",[d],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),v=t(m.prototype,"floorMaterial",[g],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),M=t(m.prototype,"floorColors",[b],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),C=m))||C));i._RF.pop()}}}));
+System.register("chunks:///_virtual/BackgroundController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
 
-System.register("chunks:///_virtual/BotController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(t){"use strict";var o,n,e,i,r;return{setters:[function(t){o=t.inheritsLoose},function(t){n=t.cclegacy,e=t._decorator,i=t.Component},function(t){r=t.Constants}],execute:function(){var s;n._RF.push({},"0e3402QL4JA6KOtUEb0CwYZ","BotController",void 0);var l=e.ccclass;t("BotController",l("BotController")(s=function(t){function n(){for(var o,n=arguments.length,e=new Array(n),i=0;i<n;i++)e[i]=arguments[i];return(o=t.call.apply(t,[this].concat(e))||this)._canStep=!0,o._botSkill=0,o}o(n,t);var e=n.prototype;return e.botStart=function(){var t=this;this._canStep=!0,this._botSkill=r.gameController.BotSkill,this.scheduleOnce((function(){t.botStep()}),r.gameController.IsTraining?r.BOT_TRAINING_START_DELAY:r.BOT_START_DELAY)},e.botStep=function(){var t=this;if(this._canStep){var o=r.target.node.getWorldPosition().subtract(r.opponentTorus.node.position),n=0;if(this._botSkill>=r.RandomNotFixedSeed.range(-.1,1.5)||this._botSkill>=.9){var e;if(o.y>=-.5&&o.x>=0)null==(e=r.opponentTorus)||e.Launch(r.MOVE_DIR.Right);else if(o.y>=-.5&&o.x<=0){var i;null==(i=r.opponentTorus)||i.Launch(r.MOVE_DIR.Left)}n=o.y>1?r.RandomNotFixedSeed.range(r.BOT_STEP_DELAY_MIN_1,r.BOT_STEP_DELAY_MIN_2):r.RandomNotFixedSeed.range(r.BOT_STEP_DELAY_MAX_1,r.BOT_STEP_DELAY_MAX_2)}else{var s,l;if(r.RandomNotFixedSeed.range(0,1)>.5)null==(s=r.opponentTorus)||s.Launch(r.MOVE_DIR.Right);else null==(l=r.opponentTorus)||l.Launch(r.MOVE_DIR.Left);n=r.RandomNotFixedSeed.range(.3,1)}this.scheduleOnce((function(){t.botStep()}),n)}},e.botStop=function(){this._canStep=!1},e.onDestroy=function(){this.botStop()},e.onDisable=function(){this.botStop()},n}(i))||s);n._RF.pop()}}}));
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Texture2D, Material, Color, MeshRenderer, Component, Constants;
 
-System.register("chunks:///_virtual/CameraController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(n){"use strict";var t,o,i,e,r,s,a,l,u,c;return{setters:[function(n){t=n.applyDecoratedDescriptor,o=n.inheritsLoose,i=n.initializerDefineProperty,e=n.assertThisInitialized},function(n){r=n.cclegacy,s=n._decorator,a=n.Animation,l=n.Vec3,u=n.Component},function(n){c=n.Constants}],execute:function(){var p,h,m,y,C;r._RF.push({},"16a02a11HVKD7C4ydSSnPjW","CameraController",void 0);var f=s.ccclass,d=s.property;n("CameraController",(p=f("CameraController"),h=d({type:a}),p((C=t((y=function(n){function t(){for(var t,o=arguments.length,r=new Array(o),s=0;s<o;s++)r[s]=arguments[s];return t=n.call.apply(n,[this].concat(r))||this,i(t,"Animation",C,e(t)),t._prevMainTorusPos=void 0,t}o(t,n);var r=t.prototype;return r.update=function(n){this.setCameraPosition_Y()},r.PlayShakeAnimation=function(){this.Animation.play("shake")},r.setCameraPosition_Y=function(){if(null!=this._prevMainTorusPos){var n=c.mainTorus.node.getPosition().y-this._prevMainTorusPos.y,t=new l(this.node.position.x,this.node.position.y+n/c.CAMERA_MOVE_COEFF,this.node.position.z);this.node.setPosition(t)}this._prevMainTorusPos=c.mainTorus.node.getPosition()},t}(u)).prototype,"Animation",[h],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),m=y))||m));r._RF.pop()}}}));
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Texture2D = module.Texture2D;
+      Material = module.Material;
+      Color = module.Color;
+      MeshRenderer = module.MeshRenderer;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3;
 
-System.register("chunks:///_virtual/ComplimentPopup.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(t){"use strict";var i,e,n,o,r,a,s,p,u,l,c,m,h;return{setters:[function(t){i=t.applyDecoratedDescriptor,e=t.inheritsLoose,n=t.initializerDefineProperty,o=t.assertThisInitialized},function(t){r=t.cclegacy,a=t._decorator,s=t.Sprite,p=t.Animation,u=t.SpriteFrame,l=t.Quat,c=t.Vec3,m=t.Component},function(t){h=t.Constants}],execute:function(){var f,d,y,S,P,b,v,w,C;r._RF.push({},"1335fYVzPhLfpJCa3T/B9gV","ComplimentPopup",void 0);var g=a.ccclass,F=a.property;t("ComplimentPopup",(f=g("ComplimentPopup"),d=F({type:s}),y=F({type:p}),S=F({type:u}),f((v=i((b=function(t){function i(){for(var i,e=arguments.length,r=new Array(e),a=0;a<e;a++)r[a]=arguments[a];return i=t.call.apply(t,[this].concat(r))||this,n(i,"mainSprite",v,o(i)),n(i,"animation",w,o(i)),n(i,"mainSpriteFrames",C,o(i)),i._countShow=0,i}e(i,t);var r=i.prototype;return r.start=function(){h.ComplimentPopup=this,this.Disable()},r.Show=function(){this._countShow++,this.node.active=!0,this.setPositionAndRotation();var t=this._countShow%this.mainSpriteFrames.length;this.mainSprite.spriteFrame=this.mainSpriteFrames[t],this.animation.play(h.COMPLIMENT_ENABLE_ANIMATION)},r.setPositionAndRotation=function(){var t=new l;0==h.RandomNotFixedSeed.Rand(2)?(this.node.setPosition(new c(-5,100,0)),l.fromEuler(t,0,0,5)):(this.node.setPosition(new c(5,100,0)),l.fromEuler(t,0,0,-5)),this.node.setRotation(t)},r.Disable=function(){this.node.active=!1},i}(m)).prototype,"mainSprite",[d],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),w=i(b.prototype,"animation",[y],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),C=i(b.prototype,"mainSpriteFrames",[S],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),P=b))||P));r._RF.pop()}}}));
+      cclegacy._RF.push({}, "ad494POf3hFr6R/5bz3tH2h", "BackgroundController", undefined);
 
-System.register("chunks:///_virtual/Constants.ts",["cc","./CustomRandom.ts"],(function(_){"use strict";var E,O,T;return{setters:[function(_){E=_.cclegacy,O=_.Vec3},function(_){T=_.default}],execute:function(){var n,t,S,A,P;E._RF.push({},"4d469WYnV1JS4w7x6VGpUJQ","Constants",void 0),function(_){_[_.SOLO=0]="SOLO",_[_.WITH_BOT=1]="WITH_BOT",_[_.PVP=2]="PVP"}(n||(n={})),function(_){_[_.MAIN=0]="MAIN",_[_.OPPONENT=1]="OPPONENT"}(t||(t={})),function(_){_[_.Left=0]="Left",_[_.Right=1]="Right"}(S||(S={})),function(_){_.LIGHT="lightImpact",_.MEDIUM="mediumImpact",_.HEAVY="heavyImpact"}(A||(A={})),function(_){_.START_TOUCH="start_touch"}(P||(P={}));var o=_("Constants",(function(){}));o.gameController=void 0,o.cameraController=void 0,o.mainTorus=void 0,o.opponentTorus=void 0,o.fakeTorus=void 0,o.target=void 0,o.MainCanvas=void 0,o.MainCamera=void 0,o.ComplimentPopup=void 0,o.RandomFixedSeed=new T(111),o.RandomNotFixedSeed=new T,o.GAME_MODE=n,o.TORUS_TYPE=t,o.MOVE_DIR=S,o.HAPTIC_TYPE=A,o.GAME_EVENT=P,o.LEFT_BOARDER_NAME="left",o.RIGHT_BOARDER_NAME="right",o.UX_TORUS_HIT='"play_hoops_random_hit"',o.UX_TORUS_LAUNCH='"play_hoops_launch"',o.ADD_SCORE=10,o.TOUCH_DELAY=.15,o.MAIN_TORUS_SPAWN_POS=new O(-2.5,1.8,0),o.OPPONENT_TORUS_SPAWN_POS=new O(2.5,1.8,0),o.TORUS_SPAWN_CENTER_POS=new O(0,1.8,0),o.TORUS_FORCE=700,o.TORUS_PHYSICS_GROUP_MAIN=2,o.TORUS_PHYSICS_GROUP_OPPONENT=4,o.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER=.5,o.LEADER_POS_Y=1.8,o.PHYSICS_FIXED_TIME_STEP=1/60,o.PHYSICS_MAX_SUB_STEPS=5,o.MAX_ACCUMULATOR=.2,o.SPHERE_SPAWN_POS_X=[-2.5,0,2.5],o.SPHERE_SPAWN_POS_Y=[5,7,9],o.SPHERE_ENABLE_ANIMATION="sphere_enable",o.SPHERE_TRIGGER_DELAY=.2,o.COMPLIMENT_ENABLE_ANIMATION="compliment_enable",o.COMPLIMENT_POPUP_DURATION=1.5,o.BOT_START_DELAY=4,o.BOT_TRAINING_START_DELAY=12,o.BOT_STEP_DELAY_MIN_1=.2,o.BOT_STEP_DELAY_MIN_2=.3,o.BOT_STEP_DELAY_MAX_1=.3,o.BOT_STEP_DELAY_MAX_2=.5,o.CAMERA_MOVE_COEFF=6,E._RF.pop()}}}));
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var BackgroundController = exports('BackgroundController', (_dec = ccclass('BackgroundController'), _dec2 = property({
+        type: Texture2D
+      }), _dec3 = property(Material), _dec4 = property({
+        type: Color
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(BackgroundController, _Component);
 
-System.register("chunks:///_virtual/CustomRandom.ts",["./rollupPluginModLoBabelHelpers.js","cc"],(function(e){"use strict";var t,n,s;return{setters:[function(e){t=e.createClass},function(e){n=e.cclegacy,s=e._decorator}],execute:function(){var r;n._RF.push({},"9c6a8rwrYVGZpOCTLjZ/Rz6","CustomRandom",void 0);var i=s.ccclass;e("default",i("CustomRandom")(r=function(){function e(e){this.seed=void 0,this.seed=e,this.seed||0==this.seed||(this.seed=(new Date).getTime())}var n=e.prototype;return n.range=function(e,t){return this.seed||0==this.seed||(this.seed=(new Date).getTime()),t=t||1,e=e||0,this.seed=(9301*this.seed+49297)%233280,e+this.seed/233280*(t-e)},n.Rand=function(e){return Math.floor(this.range(0,e))},n.RandInArray=function(e,t,n){return(e=(e=e.filter((function(e){return e!==t}))).filter((function(e){return e!==n})))[this.Rand(e.length)]},t(e,[{key:"value",get:function(){return this.range(0,1)}}]),e}())||r);n._RF.pop()}}}));
+        function BackgroundController() {
+          var _this;
 
-System.register("chunks:///_virtual/GameController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./BotController.ts","./Constants.ts","./TouchController.ts","./TorusSpawner.ts","./BackgroundController.ts","./TrainingController.ts","./CameraController.ts"],(function(e){"use strict";var n,t,o,r,i,a,l,s,c,u,d,h,p,b,m,C,f,S,w;return{setters:[function(e){n=e.applyDecoratedDescriptor,t=e.inheritsLoose,o=e.initializerDefineProperty,r=e.assertThisInitialized},function(e){i=e.cclegacy,a=e._decorator,l=e.Camera,s=e.Canvas,c=e.Prefab,u=e.PhysicsSystem,d=e.math,h=e.Component},function(e){p=e.BotController},function(e){b=e.Constants},function(e){m=e.TouchController},function(e){C=e.TorusSpawner},function(e){f=e.BackgroundController},function(e){S=e.TrainingController},function(e){w=e.CameraController}],execute:function(){var M,O,g,y,G,T,v,B,z,_,E,I,P,k,D,L,A,H,W,x,R;i._RF.push({},"72945lhD2RGPaT16DxHpjWT","GameController",void 0);var F=a.ccclass,X=a.property;e("GameController",(M=F("GameController"),O=X({type:p}),g=X({type:m}),y=X({type:w}),G=X({type:S}),T=X({type:C}),v=X({type:f}),B=X({type:l}),z=X({type:s}),_=X({type:c}),M((P=n((I=function(e){function n(){for(var n,t=arguments.length,i=new Array(t),a=0;a<t;a++)i[a]=arguments[a];return n=e.call.apply(e,[this].concat(i))||this,o(n,"botController",P,r(n)),o(n,"touchController",k,r(n)),o(n,"cameraController",D,r(n)),o(n,"trainingController",L,r(n)),o(n,"torusSpawner",A,r(n)),o(n,"backgroundController",H,r(n)),o(n,"MainCamera",W,r(n)),o(n,"MainCanvas",x,r(n)),o(n,"ScoreAnimPrefab",R,r(n)),n.GameMode=b.GAME_MODE.WITH_BOT,n.MainScore=0,n.BotScore=0,n.IsMaster=!1,n.IsTraining=!1,n.BotSkill=0,n}t(n,e);var i=n.prototype;return i.__preload=function(){b.gameController=this,this.touchController.enabled=!1,b.MainCamera=this.MainCamera,b.MainCanvas=this.MainCanvas,b.cameraController=this.cameraController},i.onLoad=function(){u.instance.fixedTimeStep=b.PHYSICS_FIXED_TIME_STEP,u.instance.maxSubSteps=b.PHYSICS_MAX_SUB_STEPS,window.GameController=this},i.start=function(){void 0!==window.blitzOnSceneLoaded?window.blitzOnSceneLoaded():this.startGame("Bot",d.randomRange(0,100),!0,!1,0)},i.startGame=function(e,n,t,o,r){b.RandomFixedSeed.seed=n,this.setGameMode(e),this.MainScore=0,this.BotScore=0,this.IsMaster=t,this.IsTraining=o,this.BotSkill=r,this.IsTraining?b.RandomFixedSeed.seed=100:this.trainingController.node.destroy(),this.torusSpawner.Spawn(),this.backgroundController.SpawnBG(),this.GameMode==b.GAME_MODE.WITH_BOT?this.botController.botStart():this.botController.botStop(),this.touchController.enabled=!0},i.stopTraining=function(){this.IsTraining&&null!==this.trainingController&&(this.trainingController.node.destroy(),this.trainingController=null)},i.gameStop=function(){this.touchController.enabled=!1,this.GameMode==b.GAME_MODE.WITH_BOT&&(this.botController.botStop(),this.botGameOver())},i.botGameOver=function(){void 0!==window.blitzOnBotGameOverOneWorld&&window.blitzOnBotGameOverOneWorld()},i.gameOver=function(){void 0!==window.blitzOnGameOver&&window.blitzOnGameOver()},i.setGameMode=function(e){switch(e){case"Human":this.GameMode=b.GAME_MODE.PVP;break;case"Bot":this.GameMode=b.GAME_MODE.WITH_BOT;break;case"SinglePlayer":this.GameMode=b.GAME_MODE.SOLO;break;default:console.log("GameMode not found")}},i.PlayUX=function(e){void 0!==window.blitzOnUX&&window.blitzOnUX(e)},i.addScore=function(e){this.MainScore+=e,this.checkLeader(e),void 0!==window.blitzOnScore&&window.blitzOnScore(this.MainScore)},i.addBotScore=function(e){this.BotScore+=e,this.checkLeader(e),void 0!==window.blitzOnNewBotScoreOneWorld&&window.blitzOnNewBotScoreOneWorld(this.BotScore)},i.checkLeader=function(e){if(!(e<=0)&&this.GameMode!==b.GAME_MODE.SOLO){var n=this.BotScore>this.MainScore;this.scheduleOnce((function(){b.opponentTorus.SetLeader(n),b.mainTorus.SetLeader(!n)}),.4)}},i.launchOpponentTorus=function(e){var n;null==(n=b.opponentTorus)||n.Launch(e)},n}(h)).prototype,"botController",[O],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),k=n(I.prototype,"touchController",[g],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),D=n(I.prototype,"cameraController",[y],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),L=n(I.prototype,"trainingController",[G],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),A=n(I.prototype,"torusSpawner",[T],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),H=n(I.prototype,"backgroundController",[v],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),W=n(I.prototype,"MainCamera",[B],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),x=n(I.prototype,"MainCanvas",[z],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),R=n(I.prototype,"ScoreAnimPrefab",[_],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),E=I))||E));i._RF.pop()}}}));
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
 
-System.register("chunks:///_virtual/main",["./BackgroundController.ts","./BotController.ts","./CameraController.ts","./ComplimentPopup.ts","./Constants.ts","./CustomRandom.ts","./GameController.ts","./PoolManager.ts","./RotateComponent.ts","./ScoreController.ts","./Startup.ts","./Target.ts","./TargetController.ts","./Torus.ts","./TorusSpawner.ts","./TouchController.ts","./TrainingController.ts"],(function(){"use strict";return{setters:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],execute:function(){}}}));
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
 
-System.register("chunks:///_virtual/PoolManager.ts",["./rollupPluginModLoBabelHelpers.js","cc"],(function(t){"use strict";var o,e,n,i,a;return{setters:[function(t){o=t.createClass},function(t){e=t.cclegacy,n=t._decorator,i=t.instantiate,a=t.NodePool}],execute:function(){var r,c;e._RF.push({},"5e33aGSgzVJm7Wm1JoiXmXg","PoolManager",void 0);var s=n.ccclass;t("PoolManager",s("PoolManager")(((c=function(){function t(){this.dictPool={},this.dictPrefab={}}var e=t.prototype;return e.getNode=function(t,o){var e=t.data.name;this.dictPrefab[e]=t;var n=null;if(this.dictPool.hasOwnProperty(e)){var r=this.dictPool[e];n=r.size()>0?r.get():i(t)}else{var c=new a;this.dictPool[e]=c,n=i(t)}return n.parent=o,n},e.putNode=function(t){var o=t.name,e=null;this.dictPool.hasOwnProperty(o)?e=this.dictPool[o]:(e=new a,this.dictPool[o]=e),e.put(t)},e.clearPool=function(t){this.dictPool.hasOwnProperty(t)&&this.dictPool[t].clear()},o(t,null,[{key:"instance",get:function(){return this._instance||(this._instance=new t),this._instance}}]),t}())._instance=void 0,r=c))||r);e._RF.pop()}}}));
+          _initializerDefineProperty(_this, "bgTextures", _descriptor, _assertThisInitialized(_this));
 
-System.register("chunks:///_virtual/RotateComponent.ts",["./rollupPluginModLoBabelHelpers.js","cc"],(function(e){"use strict";var t,n,i,r,o,c,a,s;return{setters:[function(e){t=e.applyDecoratedDescriptor,n=e.inheritsLoose,i=e.initializerDefineProperty,r=e.assertThisInitialized},function(e){o=e.cclegacy,c=e._decorator,a=e.Vec3,s=e.Component}],execute:function(){var u,l,p,f,h,y,d;o._RF.push({},"457ebHanMRKlYHgtsCO7F6U","RotateComponent",void 0);var b=c.ccclass,g=c.property;e("RotateComponent",(u=b("RotateComponent"),l=g(Number),p=g(a),u((y=t((h=function(e){function t(){for(var t,n=arguments.length,o=new Array(n),c=0;c<n;c++)o[c]=arguments[c];return t=e.call.apply(e,[this].concat(o))||this,i(t,"Speed",y,r(t)),i(t,"Direction",d,r(t)),t}return n(t,e),t.prototype.update=function(e){var t=this.Speed*e,n=this.node.eulerAngles;this.node.eulerAngles=new a(n.x+this.Direction.x*t,n.y+this.Direction.y*t,n.z+this.Direction.z*t)},t}(s)).prototype,"Speed",[l],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return 0}}),d=t(h.prototype,"Direction",[p],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return new a}}),f=h))||f));o._RF.pop()}}}));
+          _initializerDefineProperty(_this, "floorMaterial", _descriptor2, _assertThisInitialized(_this));
 
-System.register("chunks:///_virtual/ScoreController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts","./PoolManager.ts"],(function(o){"use strict";var n,e,t,r,a,c,s,i;return{setters:[function(o){n=o.inheritsLoose},function(o){e=o.cclegacy,t=o._decorator,r=o.Vec3,a=o.Animation,c=o.Component},function(o){s=o.Constants},function(o){i=o.PoolManager}],execute:function(){var l;e._RF.push({},"44e57PoZmBDba/ht2k+EZdR","ScoreController",void 0);var u=t.ccclass;o("ScoreController",u("ScoreController")(l=function(o){function e(){return o.apply(this,arguments)||this}return n(e,o),e.prototype.ShowScore=function(o,n){var e=i.instance.getNode(s.gameController.ScoreAnimPrefab,s.MainCanvas.node),t=new r;s.MainCamera.convertToUINode(n,s.MainCanvas.node,t),e.setPosition(t);var c=e.getComponent(a);c.once(a.EventType.FINISHED,(function(){e.destroy()})),c.play()},e}(c))||l);e._RF.pop()}}}));
+          _initializerDefineProperty(_this, "floorColors", _descriptor3, _assertThisInitialized(_this));
 
-System.register("chunks:///_virtual/Startup.ts",["./rollupPluginModLoBabelHelpers.js","cc"],(function(t){"use strict";var e,n,r,o,c;return{setters:[function(t){e=t.inheritsLoose},function(t){n=t.cclegacy,r=t._decorator,o=t.director,c=t.Component}],execute:function(){var u;n._RF.push({},"97b5d1qDgBEnJkUNzLqOKTp","Startup",void 0);var i=r.ccclass;t("Startup",i("Startup")(u=function(t){function n(){return t.apply(this,arguments)||this}return e(n,t),n.prototype.start=function(){o.preloadScene("game",(function(){window.blitzOnSceneLoaded()}))},n}(c))||u);n._RF.pop()}}}));
+          _this._mesh = void 0;
+          return _this;
+        }
 
-System.register("chunks:///_virtual/Target.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts","./PoolManager.ts"],(function(t){"use strict";var e,r,o,n,i,a,l,s,c,u,d,p,f,C;return{setters:[function(t){e=t.applyDecoratedDescriptor,r=t.inheritsLoose,o=t.initializerDefineProperty,n=t.assertThisInitialized},function(t){i=t.cclegacy,a=t._decorator,l=t.Color,s=t.Material,c=t.Prefab,u=t.ParticleSystem,d=t.Quat,p=t.Component},function(t){f=t.Constants},function(t){C=t.PoolManager}],execute:function(){var h,m,y,g,b,P,v,M,_,x,w;i._RF.push({},"d6ab3TuehpLY5WQyEt0ADdB","Target",void 0);var A=a.ccclass,I=a.property;t("Target",(h=A("Target"),m=I({type:l}),y=I({type:l}),g=I(s),b=I({type:c}),h((M=e((v=function(t){function e(){for(var e,r=arguments.length,i=new Array(r),a=0;a<r;a++)i[a]=arguments[a];return e=t.call.apply(t,[this].concat(i))||this,o(e,"mainColors",M,n(e)),o(e,"additionalColors",_,n(e)),o(e,"material",x,n(e)),o(e,"ParticlePrefab",w,n(e)),e._currentColorIndex=null,e}r(e,t);var i=e.prototype;return i.onLoad=function(){this.setColor()},i.setColor=function(){this._currentColorIndex=f.RandomFixedSeed.Rand(this.mainColors.length),this.setColorMaterial(this.material,this.mainColors[this._currentColorIndex])},i.SetActive=function(t){this.node.active=t,this.setColor()},i.GetMainColor=function(){return this.mainColors[this._currentColorIndex]},i.GetAdditionalColor=function(){return this.additionalColors[this._currentColorIndex]},i.PlayParticles=function(t,e){var r=C.instance.getNode(this.ParticlePrefab,this.node.parent.parent);r.setWorldPosition(t);var o=r.getComponentsInChildren(u),n=this.GetMainColor(),i=this.GetAdditionalColor();o.forEach((function(t){t.startColor.colorMax=n,t.startColor.colorMin=i,t.play()}));var a=new d,l=new d;d.fromAngleZ(a,e),d.fromAngleZ(l,e+180),o[0].node.setWorldRotation(a),o[1].node.setWorldRotation(l)},i.setColorMaterial=function(t,e){null==t||t.setProperty("mainColor",e),null==t||t.setProperty("emissive",e)},e}(p)).prototype,"mainColors",[m],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),_=e(v.prototype,"additionalColors",[y],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),x=e(v.prototype,"material",[g],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),w=e(v.prototype,"ParticlePrefab",[b],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),P=v))||P));i._RF.pop()}}}));
+        var _proto = BackgroundController.prototype;
 
-System.register("chunks:///_virtual/TargetController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts","./ScoreController.ts","./Target.ts","./Torus.ts"],(function(e){"use strict";var t,r,n,o,i,a,l,s,c,g,u,d,h,T;return{setters:[function(e){t=e.applyDecoratedDescriptor,r=e.inheritsLoose,n=e.initializerDefineProperty,o=e.assertThisInitialized},function(e){i=e.cclegacy,a=e._decorator,l=e.Collider,s=e.Animation,c=e.Vec3,g=e.Component},function(e){u=e.Constants},function(e){d=e.ScoreController},function(e){h=e.Target},function(e){T=e.Torus}],execute:function(){var p,f,C,S,_,y,P,m,E;i._RF.push({},"cf0dcC5VfdAsYnHNbWjOBC6","TargetController",void 0);var R=a.ccclass,A=a.property;e("TargetController",(p=R("TargetController"),f=A({type:h}),C=A({type:l}),S=A({type:s}),p((P=t((y=function(e){function t(){for(var t,r=arguments.length,i=new Array(r),a=0;a<r;a++)i[a]=arguments[a];return t=e.call.apply(e,[this].concat(i))||this,n(t,"targets",P,o(t)),n(t,"TriggerCollider",m,o(t)),n(t,"Animation",E,o(t)),t._scoreController=new d,t._currentTargetIndex=0,t}r(t,e);var i=t.prototype;return i.onLoad=function(){u.target=this},i.start=function(){this.targets.forEach((function(e){e.enabled=!1})),this.enableRandomTarget(),this.TriggerCollider.on("onTriggerEnter",this.onTriggerEnter,this)},i.onDestroy=function(){this.TriggerCollider.off("onTriggerEnter",this.onTriggerEnter,this)},i.onTriggerEnter=function(e){var t=e.otherCollider.getComponent(T);this.onTrigger(t,!1)},i.onTrigger=function(e,t){var r=this;this.TriggerCollider.enabled=!1;var n=e.node.eulerAngles.z;this.targets[this._currentTargetIndex].PlayParticles(this.node.getWorldPosition(),n),this.scheduleOnce((function(){null!==e&&e.Type===u.TORUS_TYPE.MAIN?(u.gameController.addScore(u.ADD_SCORE),u.gameController.PlayUX(u.UX_TORUS_HIT),u.gameController.stopTraining(),r._scoreController.ShowScore(u.ADD_SCORE,new c(r.node.worldPosition.x,r.node.worldPosition.y,0)),u.ComplimentPopup.Show(),u.cameraController.PlayShakeAnimation()):e.Type===u.TORUS_TYPE.OPPONENT&&u.gameController.addBotScore(u.ADD_SCORE),r.setNextPos((function(){r.enableRandomTarget()}))}),u.SPHERE_TRIGGER_DELAY)},i.setNextPos=function(e){var t=u.RandomFixedSeed.RandInArray(u.SPHERE_SPAWN_POS_X,this.node.position.x),r=u.RandomFixedSeed.RandInArray(u.SPHERE_SPAWN_POS_Y,this.node.position.y),n=new c(t,r,0);this.node.setWorldPosition(n),e()},i.enableRandomTarget=function(){var e=this;this.targets[this._currentTargetIndex].SetActive(!1);var t=u.RandomFixedSeed.Rand(this.targets.length);this.targets[t].SetActive(!0),this._currentTargetIndex=t,this.Animation.play(u.SPHERE_ENABLE_ANIMATION),this.scheduleOnce((function(){e.TriggerCollider.enabled=!0}),.1)},t}(g)).prototype,"targets",[f],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),m=t(y.prototype,"TriggerCollider",[C],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),E=t(y.prototype,"Animation",[S],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),_=y))||_));i._RF.pop()}}}));
+        _proto.onLoad = function onLoad() {
+          var _this$node$getCompone;
 
-System.register("chunks:///_virtual/Torus.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts","./PoolManager.ts"],(function(e){"use strict";var t,i,o,n,r,s,a,l,d,h,u,c,_,p,f,T,y;return{setters:[function(e){t=e.applyDecoratedDescriptor,i=e.inheritsLoose,o=e.initializerDefineProperty,n=e.assertThisInitialized},function(e){r=e.cclegacy,s=e._decorator,a=e.Prefab,l=e.Node,d=e.AnimationComponent,h=e.ParticleSystem,u=e.RigidBody,c=e.Collider,_=e.Vec3,p=e.MeshRenderer,f=e.Component},function(e){T=e.Constants},function(e){y=e.PoolManager}],execute:function(){var E,O,C,g,P,N,R,L,m,S,A,b,v;r._RF.push({},"17747py+P5BmIqpsRq/Nhrt","Torus",void 0);var M=s.ccclass,w=s.property;e("Torus",(E=M("Torus"),O=w({type:a}),C=w({type:l}),g=w({type:l}),P=w({type:d}),N=w({type:h}),E((m=t((L=function(e){function t(){for(var t,i=arguments.length,r=new Array(i),s=0;s<i;s++)r[s]=arguments[s];return t=e.call.apply(e,[this].concat(r))||this,o(t,"leaderPrefab",m,n(t)),o(t,"startArrow",S,n(t)),o(t,"torusMeshNode",A,n(t)),o(t,"torusLaunchEffect",b,n(t)),o(t,"launchParticle",v,n(t)),t.Type=T.TORUS_TYPE.MAIN,t._rigidBody=void 0,t._collider=[],t._isFirstLaunch=!1,t._leaderNode=void 0,t._isLeader=void 0,t}i(t,e);var r=t.prototype;return r.onLoad=function(){var e,t;this._rigidBody=null!=(e=this.getComponentInChildren(u))?e:this.getComponent(u),this._collider=null!=(t=this.getComponentsInChildren(c))?t:this.getComponents(c),this._rigidBody.useGravity=!1},r.start=function(){T.gameController.GameMode!==T.GAME_MODE.SOLO&&(this.setPhysicsGroup(),this.initLeaderNode(),this.Type===T.TORUS_TYPE.OPPONENT&&(this.startArrow.active=!1)),T.gameController.IsTraining&&(this.Type===T.TORUS_TYPE.OPPONENT&&this.SetMeshEnabled(!1),this.startArrow.active=!1);for(var e=0;e<this._collider.length;e++)this._collider[e].on("onCollisionEnter",this.onCollisionEnter,this);T.gameController.node.on(T.GAME_EVENT.START_TOUCH,this.onStartTouch,this)},r.onDestroy=function(){for(var e=0;e<this._collider.length;e++)this._collider[e].off("onCollisionEnter",this.onCollisionEnter,this);T.gameController.node.off(T.GAME_EVENT.START_TOUCH,this.onStartTouch,this)},r.update=function(e){this.setLeaderNodePosition()},r.Launch=function(e,t){void 0===t&&(t=1),this._isFirstLaunch||(this._rigidBody.useGravity=!0,this._isFirstLaunch=!0),this.Type===T.TORUS_TYPE.MAIN?(this.torusLaunchEffect.play(),T.gameController.PlayUX(T.UX_TORUS_LAUNCH),this.launchParticle.play(),void 0!==window.blitzOnLaunchOpponentTorus&&1==t&&T.gameController.GameMode==T.GAME_MODE.PVP&&window.blitzOnLaunchOpponentTorus(e)):T.gameController.IsTraining&&T.opponentTorus.SetMeshEnabled(!0),this._rigidBody.setLinearVelocity(new _(0,0,0));var i=(e===T.MOVE_DIR.Left?new _(-.3,1,0):new _(.3,1,0)).multiplyScalar(T.TORUS_FORCE*t);this._rigidBody.applyForce(i)},r.SetLeader=function(e){this._isLeader=e},r.SetMeshEnabled=function(e){var t,i;(null!=(t=this.node.getComponentInChildren(p))?t:this.node.getComponent(p)).enabled=e,(null!=(i=this._leaderNode.getComponentInChildren(p))?i:this._leaderNode.getComponent(p)).enabled=e},r.initLeaderNode=function(){this._leaderNode=y.instance.getNode(this.leaderPrefab,this.node.parent),this._leaderNode.active=!1,this._isLeader=!1},r.setLeaderNodePosition=function(){if(this._leaderNode&&this._isLeader){var e=new _(this.node.worldPosition.x,this.node.worldPosition.y+T.LEADER_POS_Y,this.node.worldPosition.z);this._leaderNode.setPosition(e),this._leaderNode.active=!0}else this._leaderNode.active&&(this._leaderNode.active=!1)},r.onCollisionEnter=function(e){e.otherCollider.node.name==T.LEFT_BOARDER_NAME?this.Launch(T.MOVE_DIR.Right,T.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER):e.otherCollider.node.name==T.RIGHT_BOARDER_NAME&&this.Launch(T.MOVE_DIR.Left,T.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER)},r.onStartTouch=function(){this.Type===T.TORUS_TYPE.MAIN&&(this.startArrow.active=!1)},r.setPhysicsGroup=function(){this.Type===T.TORUS_TYPE.MAIN?this._rigidBody.setGroup(T.TORUS_PHYSICS_GROUP_MAIN):this._rigidBody.setGroup(T.TORUS_PHYSICS_GROUP_OPPONENT)},t}(f)).prototype,"leaderPrefab",[O],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),S=t(L.prototype,"startArrow",[C],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),A=t(L.prototype,"torusMeshNode",[g],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),b=t(L.prototype,"torusLaunchEffect",[P],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),v=t(L.prototype,"launchParticle",[N],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),R=L))||R));r._RF.pop()}}}));
+          this._mesh = (_this$node$getCompone = this.node.getComponentInChildren(MeshRenderer)) != null ? _this$node$getCompone : this.node.getComponent(MeshRenderer);
+          this._mesh.enabled = false;
+        };
 
-System.register("chunks:///_virtual/TorusSpawner.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts","./Torus.ts"],(function(e){"use strict";var t,r,n,o,a,i,s,u,l,p,T,c,f,h;return{setters:[function(e){t=e.applyDecoratedDescriptor,r=e.inheritsLoose,n=e.initializerDefineProperty,o=e.assertThisInitialized},function(e){a=e.cclegacy,i=e._decorator,s=e.Prefab,u=e.Material,l=e.Texture2D,p=e.instantiate,T=e.MeshRenderer,c=e.Component},function(e){f=e.Constants},function(e){h=e.Torus}],execute:function(){var m,M,P,S,O,_,g,d,y,C,R;a._RF.push({},"b87ab7Z4AxES7AvVg6+WCJC","TorusSpawner",void 0);var b=i.ccclass,N=i.property;e("TorusSpawner",(m=b("TorusSpawner"),M=N({type:s}),P=N({type:u}),S=N({type:u}),O=N({type:l}),m((d=t((g=function(e){function t(){for(var t,r=arguments.length,a=new Array(r),i=0;i<r;i++)a[i]=arguments[i];return t=e.call.apply(e,[this].concat(a))||this,n(t,"torusPref",d,o(t)),n(t,"opponentMaterial",y,o(t)),n(t,"mainMaterial",C,o(t)),n(t,"torusTextures",R,o(t)),t}r(t,e);var a=t.prototype;return a.Spawn=function(){var e,t;f.gameController.IsMaster?(e=f.MAIN_TORUS_SPAWN_POS,t=f.OPPONENT_TORUS_SPAWN_POS):(e=f.OPPONENT_TORUS_SPAWN_POS,t=f.MAIN_TORUS_SPAWN_POS),(f.gameController.GameMode===f.GAME_MODE.SOLO||f.gameController.IsTraining)&&(e=f.TORUS_SPAWN_CENTER_POS),this.createMainTorus(e),f.gameController.GameMode!==f.GAME_MODE.SOLO&&this.createOpponentTorus(t)},a.createFakeTorus=function(e){var t=p(this.torusPref);t.parent=this.node.parent,t.position=e,this.setMaterial(t,this.mainMaterial),this.setRandomTexture(t,this.torusTextures),f.fakeTorus=t.getComponent(h),f.fakeTorus.Type=f.TORUS_TYPE.MAIN},a.createOpponentTorus=function(e){var t=p(this.torusPref);t.parent=this.node.parent,t.position=e,this.setMaterial(t,this.opponentMaterial),this.setRandomTexture(t,this.torusTextures),f.opponentTorus=t.getComponent(h),f.opponentTorus.Type=f.TORUS_TYPE.OPPONENT},a.createMainTorus=function(e){var t=p(this.torusPref);t.parent=this.node.parent,t.position=e,this.setMaterial(t,this.mainMaterial),this.setRandomTexture(t,this.torusTextures),f.mainTorus=t.getComponent(h),f.mainTorus.Type=f.TORUS_TYPE.MAIN},a.setRandomTexture=function(e,t){var r,n,o=null!=(r=e.getComponentInChildren(T))?r:e.getComponent(T);null==o||null==(n=o.getMaterial(0))||n.setProperty("mainTexture",t[f.RandomFixedSeed.Rand(t.length)])},a.setMaterial=function(e,t){var r,n=null!=(r=e.getComponentInChildren(T))?r:e.getComponent(T);null==n||n.setMaterial(t,0)},t}(c)).prototype,"torusPref",[M],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),y=t(g.prototype,"opponentMaterial",[P],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),C=t(g.prototype,"mainMaterial",[S],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),R=t(g.prototype,"torusTextures",[O],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return[]}}),_=g))||_));a._RF.pop()}}}));
+        _proto.SpawnBG = function SpawnBG() {
+          var index = Constants.RandomFixedSeed.Rand(this.bgTextures.length);
+          this.setTexture(this._mesh, this.bgTextures[index]);
+          this._mesh.enabled = true;
+          this.setMainColorMaterial(this.floorMaterial, this.floorColors[index]);
 
-System.register("chunks:///_virtual/TouchController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(t){"use strict";var n,o,e,i,c,r,s;return{setters:[function(t){n=t.inheritsLoose},function(t){o=t.cclegacy,e=t._decorator,i=t.view,c=t.Node,r=t.Component},function(t){s=t.Constants}],execute:function(){var h;o._RF.push({},"824b510kfVBeryCRRW9bgk8","TouchController",void 0);var u=e.ccclass;t("TouchController",u("TouchController")(h=function(t){function o(){for(var n,o=arguments.length,e=new Array(o),i=0;i<o;i++)e[i]=arguments[i];return(n=t.call.apply(t,[this].concat(e))||this)._screenWidth=void 0,n._canTouch=!0,n._touchTimer=0,n}n(o,t);var e=o.prototype;return e.start=function(){this._screenWidth=i.getVisibleSizeInPixel().width},e.onEnable=function(){this.node.on(c.EventType.TOUCH_START,this.onTouchStart,this)},e.onDisable=function(){this.node.off(c.EventType.TOUCH_START,this.onTouchStart,this)},e.onTouchStart=function(t,n){if(this._canTouch){var o,e;if(s.gameController.node.emit(s.GAME_EVENT.START_TOUCH),t.getLocation().x>this._screenWidth/2)null==(o=s.mainTorus)||o.Launch(s.MOVE_DIR.Right);else null==(e=s.mainTorus)||e.Launch(s.MOVE_DIR.Left);this._canTouch=!1,this._touchTimer=0}},e.update=function(t){this._touchTimer+=t,!this._canTouch&&this._touchTimer>=s.TOUCH_DELAY&&(this._canTouch=!0,this._touchTimer=0)},o}(r))||h);o._RF.pop()}}}));
+          if (index == 2) {
+            this.node.setPosition(0, -60, -410);
+          }
+        };
 
-System.register("chunks:///_virtual/TrainingController.ts",["./rollupPluginModLoBabelHelpers.js","cc","./Constants.ts"],(function(t){"use strict";var r,n,e,o,i,a,s,l,u,h,c,g,A,p,w;return{setters:[function(t){r=t.applyDecoratedDescriptor,n=t.inheritsLoose,e=t.initializerDefineProperty,o=t.assertThisInitialized},function(t){i=t.cclegacy,a=t._decorator,s=t.Animation,l=t.Prefab,u=t.instantiate,h=t.Vec3,c=t.MeshRenderer,g=t.Vec4,A=t.Quat,p=t.Component},function(t){w=t.Constants}],execute:function(){var d,f,m,T,y,v,b,_,C;i._RF.push({},"e31b72Fd4lI0YTsCm/CLfIh","TrainingController",void 0);var E=a.ccclass,B=a.property;t("TrainingController",(d=E("TrainingController"),f=B({type:s}),m=B({type:s}),T=B({type:l}),d((b=r((v=function(t){function r(){for(var r,n=arguments.length,i=new Array(n),a=0;a<n;a++)i[a]=arguments[a];return r=t.call.apply(t,[this].concat(i))||this,e(r,"leftButtonAnim",b,o(r)),e(r,"rightButtonAnim",_,o(r)),e(r,"arrowPref",C,o(r)),r.currentActiveAnimDir=void 0,r.targetArrow=void 0,r}n(r,t);var i=r.prototype;return i.start=function(){this.targetArrow=u(this.arrowPref),this.targetArrow.parent=w.target.node,this.targetArrow.scale=new h(1,1,1),this.targetArrow.active=!0,w.gameController.node.on(w.GAME_EVENT.START_TOUCH,this.onStartTouch,this)},i.swapAnim=function(t){switch(this.currentActiveAnimDir=t,t){case w.MOVE_DIR.Left:this.leftButtonAnim.play("training_button_left"),this.rightButtonAnim.play("training_button_idle");break;case w.MOVE_DIR.Right:this.leftButtonAnim.play("training_button_idle"),this.rightButtonAnim.play("training_button_right");break;default:return void console.log("Training dir not found")}},i.onDisable=function(){var t;this.leftButtonAnim.node.active=!1,this.rightButtonAnim.node.active=!1,null==(t=this.targetArrow)||t.destroy(),w.gameController.node.off(w.GAME_EVENT.START_TOUCH,this.onStartTouch,this)},i.onStartTouch=function(){},i.updateButtonsState=function(){var t=0;(t=w.mainTorus.node.position.x>w.target.node.position.x?w.MOVE_DIR.Left:w.MOVE_DIR.Right)!==this.currentActiveAnimDir&&this.swapAnim(t)},i.setTargetArrowAlpha=function(t){var r,n;null==(n=(null!=(r=this.targetArrow.getComponentInChildren(c))?r:this.targetArrow.getComponent(c)).getMaterial(0))||n.setProperty("albedo",new g(0,0,0,t))},i.updateTargetArrow=function(){if(null!==this.targetArrow){var t=new A;w.mainTorus.node.worldPosition.y>w.target.node.position.y?(this.targetArrow.lookAt(w.mainTorus.node.worldPosition,new h(0,0,1)),A.toEuler(t,this.targetArrow.rotation),this.targetArrow.setRotationFromEuler(new h(0,0,t.z))):(this.targetArrow.lookAt(w.mainTorus.node.worldPosition,new h(0,0,-1)),A.toEuler(t,this.targetArrow.rotation),this.targetArrow.setRotationFromEuler(new h(0,0,t.z+180)));var r=h.distance(w.mainTorus.node.worldPosition,w.target.node.worldPosition);r>=8?this.setTargetArrowAlpha(1):r<=2?this.setTargetArrowAlpha(0):this.setTargetArrowAlpha(r/8)}},i.update=function(t){this.updateButtonsState(),this.updateTargetArrow()},r}(p)).prototype,"leftButtonAnim",[f],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),_=r(v.prototype,"rightButtonAnim",[m],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),C=r(v.prototype,"arrowPref",[T],{configurable:!0,enumerable:!0,writable:!0,initializer:function(){return null}}),y=v))||y));i._RF.pop()}}}));
+        _proto.setTexture = function setTexture(mesh, texture) {
+          var _mesh$getMaterial;
+
+          mesh == null ? void 0 : (_mesh$getMaterial = mesh.getMaterial(0)) == null ? void 0 : _mesh$getMaterial.setProperty("mainTexture", texture);
+        };
+
+        _proto.setMainColorMaterial = function setMainColorMaterial(material, color) {
+          material.setProperty("mainColor", color);
+        };
+
+        return BackgroundController;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "bgTextures", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "floorMaterial", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "floorColors", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/BotController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
+
+  var _inheritsLoose, cclegacy, _decorator, Component, Constants;
+
+  return {
+    setters: [function (module) {
+      _inheritsLoose = module.inheritsLoose;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _class;
+
+      cclegacy._RF.push({}, "0e3402QL4JA6KOtUEb0CwYZ", "BotController", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var BotController = exports('BotController', (_dec = ccclass('BotController'), _dec(_class = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(BotController, _Component);
+
+        function BotController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+          _this._canStep = true;
+          _this._botSkill = 0;
+          return _this;
+        }
+
+        var _proto = BotController.prototype;
+
+        _proto.botStart = function botStart() {
+          var _this2 = this;
+
+          this._canStep = true;
+          this._botSkill = Constants.gameController.BotSkill;
+          this.scheduleOnce(function () {
+            _this2.botStep();
+          }, Constants.gameController.IsTraining ? Constants.BOT_TRAINING_START_DELAY : Constants.BOT_START_DELAY);
+        };
+
+        _proto.botStep = function botStep() {
+          var _this3 = this;
+
+          if (!this._canStep) return;
+          var dir = Constants.target.node.getWorldPosition().subtract(Constants.opponentTorus.node.position);
+          var nextBotStepDelay = 0;
+
+          if (this._botSkill >= Constants.RandomNotFixedSeed.range(-0.1, 1.5) || this._botSkill >= 0.9) {
+            if (dir.y >= -0.5 && dir.x >= 0) {
+              var _Constants$opponentTo;
+
+              (_Constants$opponentTo = Constants.opponentTorus) == null ? void 0 : _Constants$opponentTo.Launch(Constants.MOVE_DIR.Right);
+            } else if (dir.y >= -0.5 && dir.x <= 0) {
+              var _Constants$opponentTo2;
+
+              (_Constants$opponentTo2 = Constants.opponentTorus) == null ? void 0 : _Constants$opponentTo2.Launch(Constants.MOVE_DIR.Left);
+            }
+
+            if (dir.y > 1) {
+              nextBotStepDelay = Constants.RandomNotFixedSeed.range(Constants.BOT_STEP_DELAY_MIN_1, Constants.BOT_STEP_DELAY_MIN_2);
+            } else {
+              nextBotStepDelay = Constants.RandomNotFixedSeed.range(Constants.BOT_STEP_DELAY_MAX_1, Constants.BOT_STEP_DELAY_MAX_2);
+            }
+          } else {
+            if (Constants.RandomNotFixedSeed.range(0, 1) > 0.5) {
+              var _Constants$opponentTo3;
+
+              (_Constants$opponentTo3 = Constants.opponentTorus) == null ? void 0 : _Constants$opponentTo3.Launch(Constants.MOVE_DIR.Right);
+            } else {
+              var _Constants$opponentTo4;
+
+              (_Constants$opponentTo4 = Constants.opponentTorus) == null ? void 0 : _Constants$opponentTo4.Launch(Constants.MOVE_DIR.Left);
+            }
+
+            nextBotStepDelay = Constants.RandomNotFixedSeed.range(0.3, 1);
+          }
+
+          this.scheduleOnce(function () {
+            _this3.botStep();
+          }, nextBotStepDelay);
+        };
+
+        _proto.botStop = function botStop() {
+          this._canStep = false;
+        };
+
+        _proto.onDestroy = function onDestroy() {
+          this.botStop();
+        };
+
+        _proto.onDisable = function onDisable() {
+          this.botStop();
+        };
+
+        return BotController;
+      }(Component)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/CameraController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Animation, Vec3, Component, Constants;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Animation = module.Animation;
+      Vec3 = module.Vec3;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _dec2, _class, _class2, _descriptor;
+
+      cclegacy._RF.push({}, "16a02a11HVKD7C4ydSSnPjW", "CameraController", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var CameraController = exports('CameraController', (_dec = ccclass('CameraController'), _dec2 = property({
+        type: Animation
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(CameraController, _Component);
+
+        function CameraController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "Animation", _descriptor, _assertThisInitialized(_this));
+
+          _this._prevMainTorusPos = void 0;
+          return _this;
+        }
+
+        var _proto = CameraController.prototype;
+
+        _proto.update = function update(deltaTime) {
+          this.setCameraPosition_Y();
+        };
+
+        _proto.PlayShakeAnimation = function PlayShakeAnimation() {
+          this.Animation.play('shake');
+        };
+
+        _proto.setCameraPosition_Y = function setCameraPosition_Y() {
+          if (this._prevMainTorusPos != null) {
+            var currentMainTorusPos = Constants.mainTorus.node.getPosition();
+            var deltaMainTorusPos_Y = currentMainTorusPos.y - this._prevMainTorusPos.y;
+            var newCameraPos = new Vec3(this.node.position.x, this.node.position.y + deltaMainTorusPos_Y / Constants.CAMERA_MOVE_COEFF, this.node.position.z);
+            this.node.setPosition(newCameraPos);
+          }
+
+          this._prevMainTorusPos = Constants.mainTorus.node.getPosition();
+        };
+
+        return CameraController;
+      }(Component), _descriptor = _applyDecoratedDescriptor(_class2.prototype, "Animation", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/ComplimentPopup.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Sprite, Animation, SpriteFrame, Quat, Vec3, Component, Constants;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Sprite = module.Sprite;
+      Animation = module.Animation;
+      SpriteFrame = module.SpriteFrame;
+      Quat = module.Quat;
+      Vec3 = module.Vec3;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3;
+
+      cclegacy._RF.push({}, "1335fYVzPhLfpJCa3T/B9gV", "ComplimentPopup", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var ComplimentPopup = exports('ComplimentPopup', (_dec = ccclass('ComplimentPopup'), _dec2 = property({
+        type: Sprite
+      }), _dec3 = property({
+        type: Animation
+      }), _dec4 = property({
+        type: SpriteFrame
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(ComplimentPopup, _Component);
+
+        function ComplimentPopup() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "mainSprite", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "animation", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "mainSpriteFrames", _descriptor3, _assertThisInitialized(_this));
+
+          _this._countShow = 0;
+          return _this;
+        }
+
+        var _proto = ComplimentPopup.prototype;
+
+        _proto.start = function start() {
+          Constants.ComplimentPopup = this;
+          this.Disable(); // for test
+          // this.scheduleOnce(() => {
+          //     this.Show();
+          //  }, 2);
+        };
+
+        _proto.Show = function Show() {
+          this._countShow++;
+          this.node.active = true;
+          this.setPositionAndRotation();
+          var frameIndex = this._countShow % this.mainSpriteFrames.length;
+          this.mainSprite.spriteFrame = this.mainSpriteFrames[frameIndex];
+          this.animation.play(Constants.COMPLIMENT_ENABLE_ANIMATION);
+        };
+
+        _proto.setPositionAndRotation = function setPositionAndRotation() {
+          var angl = new Quat();
+
+          if (Constants.RandomNotFixedSeed.Rand(2) == 0) {
+            this.node.setPosition(new Vec3(-5, 100, 0));
+            Quat.fromEuler(angl, 0, 0, 5);
+          } else {
+            this.node.setPosition(new Vec3(5, 100, 0));
+            Quat.fromEuler(angl, 0, 0, -5);
+          }
+
+          this.node.setRotation(angl);
+        };
+
+        _proto.Disable = function Disable() {
+          this.node.active = false;
+        };
+
+        return ComplimentPopup;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "mainSprite", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "animation", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "mainSpriteFrames", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/Constants.ts", ['cc', './CustomRandom.ts'], function (exports) {
+  'use strict';
+
+  var cclegacy, Vec3, CustomRandom;
+  return {
+    setters: [function (module) {
+      cclegacy = module.cclegacy;
+      Vec3 = module.Vec3;
+    }, function (module) {
+      CustomRandom = module.default;
+    }],
+    execute: function () {
+      cclegacy._RF.push({}, "4d469WYnV1JS4w7x6VGpUJQ", "Constants", undefined);
+
+      var GAME_MODE;
+
+      (function (GAME_MODE) {
+        GAME_MODE[GAME_MODE["SOLO"] = 0] = "SOLO";
+        GAME_MODE[GAME_MODE["WITH_BOT"] = 1] = "WITH_BOT";
+        GAME_MODE[GAME_MODE["PVP"] = 2] = "PVP";
+      })(GAME_MODE || (GAME_MODE = {}));
+
+      var TORUS_TYPE;
+
+      (function (TORUS_TYPE) {
+        TORUS_TYPE[TORUS_TYPE["MAIN"] = 0] = "MAIN";
+        TORUS_TYPE[TORUS_TYPE["OPPONENT"] = 1] = "OPPONENT";
+      })(TORUS_TYPE || (TORUS_TYPE = {}));
+
+      var MOVE_DIR;
+
+      (function (MOVE_DIR) {
+        MOVE_DIR[MOVE_DIR["Left"] = 0] = "Left";
+        MOVE_DIR[MOVE_DIR["Right"] = 1] = "Right";
+      })(MOVE_DIR || (MOVE_DIR = {}));
+
+      var HAPTIC_TYPE;
+
+      (function (HAPTIC_TYPE) {
+        HAPTIC_TYPE["LIGHT"] = "lightImpact";
+        HAPTIC_TYPE["MEDIUM"] = "mediumImpact";
+        HAPTIC_TYPE["HEAVY"] = "heavyImpact";
+      })(HAPTIC_TYPE || (HAPTIC_TYPE = {}));
+
+      var GAME_EVENT;
+
+      (function (GAME_EVENT) {
+        GAME_EVENT["START_TOUCH"] = "start_touch";
+      })(GAME_EVENT || (GAME_EVENT = {}));
+
+      var Constants = exports('Constants', function Constants() {});
+      Constants.gameController = void 0;
+      Constants.cameraController = void 0;
+      Constants.mainTorus = void 0;
+      Constants.opponentTorus = void 0;
+      Constants.fakeTorus = void 0;
+      Constants.target = void 0;
+      Constants.MainCanvas = void 0;
+      Constants.MainCamera = void 0;
+      Constants.ComplimentPopup = void 0;
+      Constants.RandomFixedSeed = new CustomRandom(111);
+      Constants.RandomNotFixedSeed = new CustomRandom();
+      Constants.GAME_MODE = GAME_MODE;
+      Constants.TORUS_TYPE = TORUS_TYPE;
+      Constants.MOVE_DIR = MOVE_DIR;
+      Constants.HAPTIC_TYPE = HAPTIC_TYPE;
+      Constants.GAME_EVENT = GAME_EVENT;
+      Constants.LEFT_BOARDER_NAME = "left";
+      Constants.RIGHT_BOARDER_NAME = "right";
+      Constants.UX_TORUS_HIT = "\"play_hoops_random_hit\"";
+      Constants.UX_TORUS_LAUNCH = "\"play_hoops_launch\"";
+      Constants.ADD_SCORE = 10;
+      Constants.TOUCH_DELAY = 0.15;
+      Constants.MAIN_TORUS_SPAWN_POS = new Vec3(-2.5, 1.8, 0);
+      Constants.OPPONENT_TORUS_SPAWN_POS = new Vec3(2.5, 1.8, 0);
+      Constants.TORUS_SPAWN_CENTER_POS = new Vec3(0, 1.8, 0);
+      Constants.TORUS_FORCE = 700;
+      Constants.TORUS_PHYSICS_GROUP_MAIN = 2;
+      Constants.TORUS_PHYSICS_GROUP_OPPONENT = 4;
+      Constants.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER = 0.5;
+      Constants.LEADER_POS_Y = 1.8;
+      Constants.PHYSICS_FIXED_TIME_STEP = 1 / 60;
+      Constants.PHYSICS_MAX_SUB_STEPS = 5;
+      Constants.MAX_ACCUMULATOR = 1 / 5;
+      Constants.SPHERE_SPAWN_POS_X = [-2.5, 0, 2.5];
+      Constants.SPHERE_SPAWN_POS_Y = [5, 7, 9];
+      Constants.SPHERE_ENABLE_ANIMATION = "sphere_enable";
+      Constants.SPHERE_TRIGGER_DELAY = 0.2;
+      Constants.COMPLIMENT_ENABLE_ANIMATION = "compliment_enable";
+      Constants.COMPLIMENT_POPUP_DURATION = 1.5;
+      Constants.BOT_START_DELAY = 4;
+      Constants.BOT_TRAINING_START_DELAY = 12;
+      Constants.BOT_STEP_DELAY_MIN_1 = 0.2;
+      Constants.BOT_STEP_DELAY_MIN_2 = 0.3;
+      Constants.BOT_STEP_DELAY_MAX_1 = 0.3;
+      Constants.BOT_STEP_DELAY_MAX_2 = 0.5;
+      Constants.CAMERA_MOVE_COEFF = 6;
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/CustomRandom.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc'], function (exports) {
+  'use strict';
+
+  var _createClass, cclegacy, _decorator;
+
+  return {
+    setters: [function (module) {
+      _createClass = module.createClass;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+    }],
+    execute: function () {
+      var _dec, _class;
+
+      cclegacy._RF.push({}, "9c6a8rwrYVGZpOCTLjZ/Rz6", "CustomRandom", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var CustomRandom = exports('default', (_dec = ccclass('CustomRandom'), _dec(_class = /*#__PURE__*/function () {
+        /**
+             * Create a random number generator
+         */
+        function CustomRandom(seed) {
+          this.seed = void 0;
+          this.seed = seed;
+
+          if (!this.seed && this.seed != 0) {
+            this.seed = new Date().getTime();
+          }
+        }
+        /**
+             * Set the seed for the random number generator. If it is not set, it will actually take the current time in milliseconds.
+         */
+
+
+        var _proto = CustomRandom.prototype;
+        /**
+             * Returns a random floating point number between min and max
+         */
+
+        _proto.range = function range(min, max) {
+          if (!this.seed && this.seed != 0) {
+            this.seed = new Date().getTime();
+          }
+
+          max = max || 1;
+          min = min || 0;
+          this.seed = (this.seed * 9301 + 49297) % 233280;
+          var rnd = this.seed / 233280.0;
+          return min + rnd * (max - min);
+        }
+        /**
+             * Returns an integer between [0, max)
+        */
+        ;
+
+        _proto.Rand = function Rand(max) {
+          return Math.floor(this.range(0, max));
+        };
+
+        _proto.RandInArray = function RandInArray(array, exclud1, exclud2) {
+          array = array.filter(function (obj) {
+            return obj !== exclud1;
+          });
+          array = array.filter(function (obj) {
+            return obj !== exclud2;
+          });
+          return array[this.Rand(array.length)];
+        };
+
+        _createClass(CustomRandom, [{
+          key: "value",
+          get:
+          /**
+               * Returns a random number between 0.0 and 1.0
+           */
+          function get() {
+            return this.range(0, 1);
+          }
+        }]);
+
+        return CustomRandom;
+      }()) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/GameController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './BotController.ts', './Constants.ts', './TouchController.ts', './TorusSpawner.ts', './BackgroundController.ts', './TrainingController.ts', './CameraController.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Camera, Canvas, Prefab, PhysicsSystem, math, Component, BotController, Constants, TouchController, TorusSpawner, BackgroundController, TrainingController, CameraController;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Camera = module.Camera;
+      Canvas = module.Canvas;
+      Prefab = module.Prefab;
+      PhysicsSystem = module.PhysicsSystem;
+      math = module.math;
+      Component = module.Component;
+    }, function (module) {
+      BotController = module.BotController;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      TouchController = module.TouchController;
+    }, function (module) {
+      TorusSpawner = module.TorusSpawner;
+    }, function (module) {
+      BackgroundController = module.BackgroundController;
+    }, function (module) {
+      TrainingController = module.TrainingController;
+    }, function (module) {
+      CameraController = module.CameraController;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+
+      cclegacy._RF.push({}, "72945lhD2RGPaT16DxHpjWT", "GameController", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var GameController = exports('GameController', (_dec = ccclass('GameController'), _dec2 = property({
+        type: BotController
+      }), _dec3 = property({
+        type: TouchController
+      }), _dec4 = property({
+        type: CameraController
+      }), _dec5 = property({
+        type: TrainingController
+      }), _dec6 = property({
+        type: TorusSpawner
+      }), _dec7 = property({
+        type: BackgroundController
+      }), _dec8 = property({
+        type: Camera
+      }), _dec9 = property({
+        type: Canvas
+      }), _dec10 = property({
+        type: Prefab
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(GameController, _Component);
+
+        function GameController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "botController", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "touchController", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "cameraController", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "trainingController", _descriptor4, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "torusSpawner", _descriptor5, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "backgroundController", _descriptor6, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "MainCamera", _descriptor7, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "MainCanvas", _descriptor8, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "ScoreAnimPrefab", _descriptor9, _assertThisInitialized(_this));
+
+          _this.GameMode = Constants.GAME_MODE.WITH_BOT;
+          _this.MainScore = 0;
+          _this.BotScore = 0;
+          _this.IsMaster = false;
+          _this.IsTraining = false;
+          _this.BotSkill = 0;
+          return _this;
+        }
+
+        var _proto = GameController.prototype;
+
+        _proto.__preload = function __preload() {
+          Constants.gameController = this;
+          this.touchController.enabled = false;
+          Constants.MainCamera = this.MainCamera;
+          Constants.MainCanvas = this.MainCanvas;
+          Constants.cameraController = this.cameraController;
+        };
+
+        _proto.onLoad = function onLoad() {
+          PhysicsSystem.instance.fixedTimeStep = Constants.PHYSICS_FIXED_TIME_STEP;
+          PhysicsSystem.instance.maxSubSteps = Constants.PHYSICS_MAX_SUB_STEPS;
+          window.GameController = this;
+        };
+
+        _proto.start = function start() {
+          if (window.blitzOnSceneLoaded !== undefined) window.blitzOnSceneLoaded();else // this.startGame("StrongBot", 0, true, false, 1) //green - 517
+            this.startGame("Bot", math.randomRange(0, 100), true, false, 0); // this.startGame("SinglePlayer", 0, true)
+        };
+
+        _proto.startGame = function startGame(gameMode, seed, isMaster, isFirstLaunch, botSkill) {
+          Constants.RandomFixedSeed.seed = seed;
+          this.setGameMode(gameMode);
+          this.MainScore = 0;
+          this.BotScore = 0;
+          this.IsMaster = isMaster;
+          this.IsTraining = isFirstLaunch;
+          this.BotSkill = botSkill;
+
+          if (!this.IsTraining) {
+            this.trainingController.node.destroy();
+          } else {
+            Constants.RandomFixedSeed.seed = 100;
+          }
+
+          this.torusSpawner.Spawn();
+          this.backgroundController.SpawnBG();
+          if (this.GameMode == Constants.GAME_MODE.WITH_BOT) this.botController.botStart();else this.botController.botStop();
+          this.touchController.enabled = true;
+        };
+
+        _proto.stopTraining = function stopTraining() {
+          if (this.IsTraining && this.trainingController !== null) {
+            this.trainingController.node.destroy();
+            this.trainingController = null;
+          }
+        };
+
+        _proto.gameStop = function gameStop() {
+          this.touchController.enabled = false;
+
+          if (this.GameMode == Constants.GAME_MODE.WITH_BOT) {
+            this.botController.botStop();
+            this.botGameOver();
+          }
+        };
+
+        _proto.botGameOver = function botGameOver() {
+          if (window.blitzOnBotGameOverOneWorld !== undefined) window.blitzOnBotGameOverOneWorld();
+        };
+
+        _proto.gameOver = function gameOver() {
+          if (window.blitzOnGameOver !== undefined) window.blitzOnGameOver();
+        };
+
+        _proto.setGameMode = function setGameMode(gameMode) {
+          switch (gameMode) {
+            case "Human":
+              this.GameMode = Constants.GAME_MODE.PVP;
+              break;
+
+            case "Bot":
+              this.GameMode = Constants.GAME_MODE.WITH_BOT;
+              break;
+
+            case "SinglePlayer":
+              this.GameMode = Constants.GAME_MODE.SOLO;
+              break;
+
+            default:
+              console.log("GameMode not found");
+          }
+        };
+
+        _proto.PlayUX = function PlayUX(name) {
+          if (window.blitzOnUX !== undefined) window.blitzOnUX(name);
+        };
+
+        _proto.addScore = function addScore(score) {
+          this.MainScore += score;
+          this.checkLeader(score);
+          if (window.blitzOnScore !== undefined) window.blitzOnScore(this.MainScore);
+        };
+
+        _proto.addBotScore = function addBotScore(score) {
+          this.BotScore += score;
+          this.checkLeader(score);
+          if (window.blitzOnNewBotScoreOneWorld !== undefined) window.blitzOnNewBotScoreOneWorld(this.BotScore);
+        };
+
+        _proto.checkLeader = function checkLeader(score) {
+          if (score <= 0) {
+            return;
+          }
+
+          if (this.GameMode !== Constants.GAME_MODE.SOLO) {
+            var isBotLeader = this.BotScore > this.MainScore;
+            this.scheduleOnce(function () {
+              Constants.opponentTorus.SetLeader(isBotLeader);
+              Constants.mainTorus.SetLeader(!isBotLeader);
+            }, 0.4);
+          }
+        };
+
+        _proto.launchOpponentTorus = function launchOpponentTorus(dir) {
+          var _Constants$opponentTo;
+
+          (_Constants$opponentTo = Constants.opponentTorus) == null ? void 0 : _Constants$opponentTo.Launch(dir);
+        };
+
+        return GameController;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "botController", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "touchController", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "cameraController", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "trainingController", [_dec5], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor5 = _applyDecoratedDescriptor(_class2.prototype, "torusSpawner", [_dec6], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor6 = _applyDecoratedDescriptor(_class2.prototype, "backgroundController", [_dec7], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor7 = _applyDecoratedDescriptor(_class2.prototype, "MainCamera", [_dec8], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor8 = _applyDecoratedDescriptor(_class2.prototype, "MainCanvas", [_dec9], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor9 = _applyDecoratedDescriptor(_class2.prototype, "ScoreAnimPrefab", [_dec10], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/main", ['./BackgroundController.ts', './BotController.ts', './CameraController.ts', './ComplimentPopup.ts', './Constants.ts', './CustomRandom.ts', './GameController.ts', './PoolManager.ts', './RotateComponent.ts', './ScoreController.ts', './Startup.ts', './Target.ts', './TargetController.ts', './Torus.ts', './TorusSpawner.ts', './TouchController.ts', './TrainingController.ts'], function () {
+  'use strict';
+
+  return {
+    setters: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+    execute: function () {}
+  };
+});
+
+System.register("chunks:///_virtual/PoolManager.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc'], function (exports) {
+  'use strict';
+
+  var _createClass, cclegacy, _decorator, instantiate, NodePool;
+
+  return {
+    setters: [function (module) {
+      _createClass = module.createClass;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      instantiate = module.instantiate;
+      NodePool = module.NodePool;
+    }],
+    execute: function () {
+      var _dec, _class, _class2;
+
+      cclegacy._RF.push({}, "5e33aGSgzVJm7Wm1JoiXmXg", "PoolManager", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var PoolManager = exports('PoolManager', (_dec = ccclass("PoolManager"), _dec(_class = (_class2 = /*#__PURE__*/function () {
+        function PoolManager() {
+          this.dictPool = {};
+          this.dictPrefab = {};
+        }
+
+        var _proto = PoolManager.prototype;
+
+        _proto.getNode = function getNode(prefab, parent) {
+          var name = prefab.data.name;
+          this.dictPrefab[name] = prefab;
+          var node = null;
+
+          if (this.dictPool.hasOwnProperty(name)) {
+            var pool = this.dictPool[name];
+
+            if (pool.size() > 0) {
+              node = pool.get();
+            } else {
+              node = instantiate(prefab);
+            }
+          } else {
+            var _pool = new NodePool();
+
+            this.dictPool[name] = _pool;
+            node = instantiate(prefab);
+          }
+
+          node.parent = parent;
+          return node;
+        };
+
+        _proto.putNode = function putNode(node) {
+          var name = node.name;
+          var pool = null;
+
+          if (this.dictPool.hasOwnProperty(name)) {
+            pool = this.dictPool[name];
+          } else {
+            pool = new NodePool();
+            this.dictPool[name] = pool;
+          }
+
+          pool.put(node);
+        };
+
+        _proto.clearPool = function clearPool(name) {
+          if (this.dictPool.hasOwnProperty(name)) {
+            var pool = this.dictPool[name];
+            pool.clear();
+          }
+        };
+
+        _createClass(PoolManager, null, [{
+          key: "instance",
+          get: function get() {
+            if (this._instance) {
+              return this._instance;
+            }
+
+            this._instance = new PoolManager();
+            return this._instance;
+          }
+        }]);
+
+        return PoolManager;
+      }(), _class2._instance = void 0, _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/RotateComponent.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Vec3, Component;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Vec3 = module.Vec3;
+      Component = module.Component;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _class, _class2, _descriptor, _descriptor2;
+
+      cclegacy._RF.push({}, "457ebHanMRKlYHgtsCO7F6U", "RotateComponent", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var RotateComponent = exports('RotateComponent', (_dec = ccclass('RotateComponent'), _dec2 = property(Number), _dec3 = property(Vec3), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(RotateComponent, _Component);
+
+        function RotateComponent() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "Speed", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "Direction", _descriptor2, _assertThisInitialized(_this));
+
+          return _this;
+        }
+
+        var _proto = RotateComponent.prototype;
+
+        _proto.update = function update(deltaTime) {
+          var addSpeed = this.Speed * deltaTime;
+          var eulerAngles = this.node.eulerAngles;
+          this.node.eulerAngles = new Vec3(eulerAngles.x + this.Direction.x * addSpeed, eulerAngles.y + this.Direction.y * addSpeed, eulerAngles.z + this.Direction.z * addSpeed);
+        };
+
+        return RotateComponent;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "Speed", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return 0;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "Direction", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return new Vec3();
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/ScoreController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts', './PoolManager.ts'], function (exports) {
+  'use strict';
+
+  var _inheritsLoose, cclegacy, _decorator, Vec3, Animation, Component, Constants, PoolManager;
+
+  return {
+    setters: [function (module) {
+      _inheritsLoose = module.inheritsLoose;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Vec3 = module.Vec3;
+      Animation = module.Animation;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      PoolManager = module.PoolManager;
+    }],
+    execute: function () {
+      var _dec, _class;
+
+      cclegacy._RF.push({}, "44e57PoZmBDba/ht2k+EZdR", "ScoreController", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var ScoreController = exports('ScoreController', (_dec = ccclass('ScoreController'), _dec(_class = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(ScoreController, _Component);
+
+        function ScoreController() {
+          return _Component.apply(this, arguments) || this;
+        }
+
+        var _proto = ScoreController.prototype;
+
+        _proto.ShowScore = function ShowScore(score, worldPos) {
+          var node = PoolManager.instance.getNode(Constants.gameController.ScoreAnimPrefab, Constants.MainCanvas.node);
+          var pos = new Vec3();
+          var cameraComp = Constants.MainCamera;
+          cameraComp.convertToUINode(worldPos, Constants.MainCanvas.node, pos);
+          node.setPosition(pos);
+          var animationComponent = node.getComponent(Animation);
+          animationComponent.once(Animation.EventType.FINISHED, function () {
+            node.destroy();
+          });
+          animationComponent.play();
+        };
+
+        return ScoreController;
+      }(Component)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/Startup.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc'], function (exports) {
+  'use strict';
+
+  var _inheritsLoose, cclegacy, _decorator, director, Component;
+
+  return {
+    setters: [function (module) {
+      _inheritsLoose = module.inheritsLoose;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      director = module.director;
+      Component = module.Component;
+    }],
+    execute: function () {
+      var _dec, _class;
+
+      cclegacy._RF.push({}, "97b5d1qDgBEnJkUNzLqOKTp", "Startup", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var Startup = exports('Startup', (_dec = ccclass('Startup'), _dec(_class = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(Startup, _Component);
+
+        function Startup() {
+          return _Component.apply(this, arguments) || this;
+        }
+
+        var _proto = Startup.prototype;
+
+        _proto.start = function start() {
+          director.preloadScene("game", function () {
+            window.blitzOnSceneLoaded();
+          });
+        };
+
+        return Startup;
+      }(Component)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/Target.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts', './PoolManager.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Color, Material, Prefab, ParticleSystem, Quat, Component, Constants, PoolManager;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Color = module.Color;
+      Material = module.Material;
+      Prefab = module.Prefab;
+      ParticleSystem = module.ParticleSystem;
+      Quat = module.Quat;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      PoolManager = module.PoolManager;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+
+      cclegacy._RF.push({}, "d6ab3TuehpLY5WQyEt0ADdB", "Target", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var Target = exports('Target', (_dec = ccclass('Target'), _dec2 = property({
+        type: Color
+      }), _dec3 = property({
+        type: Color
+      }), _dec4 = property(Material), _dec5 = property({
+        type: Prefab
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(Target, _Component);
+
+        function Target() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "mainColors", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "additionalColors", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "material", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "ParticlePrefab", _descriptor4, _assertThisInitialized(_this));
+
+          _this._currentColorIndex = null;
+          return _this;
+        }
+
+        var _proto = Target.prototype;
+
+        _proto.onLoad = function onLoad() {
+          this.setColor();
+        };
+
+        _proto.setColor = function setColor() {
+          this._currentColorIndex = Constants.RandomFixedSeed.Rand(this.mainColors.length);
+          this.setColorMaterial(this.material, this.mainColors[this._currentColorIndex]);
+        };
+
+        _proto.SetActive = function SetActive(active) {
+          this.node.active = active;
+          this.setColor();
+        };
+
+        _proto.GetMainColor = function GetMainColor() {
+          return this.mainColors[this._currentColorIndex];
+        };
+
+        _proto.GetAdditionalColor = function GetAdditionalColor() {
+          return this.additionalColors[this._currentColorIndex];
+        };
+
+        _proto.PlayParticles = function PlayParticles(pos, rot_z) {
+          var particleNode = PoolManager.instance.getNode(this.ParticlePrefab, this.node.parent.parent);
+          particleNode.setWorldPosition(pos);
+          var particleSystemComp = particleNode.getComponentsInChildren(ParticleSystem);
+          var mainColor = this.GetMainColor();
+          var additionalColor = this.GetAdditionalColor();
+          particleSystemComp.forEach(function (element) {
+            element.startColor.colorMax = mainColor;
+            element.startColor.colorMin = additionalColor;
+            element.play();
+          });
+          var leftRotation = new Quat();
+          var rightRotation = new Quat();
+          Quat.fromAngleZ(leftRotation, rot_z);
+          Quat.fromAngleZ(rightRotation, rot_z + 180);
+          particleSystemComp[0].node.setWorldRotation(leftRotation);
+          particleSystemComp[1].node.setWorldRotation(rightRotation);
+        };
+
+        _proto.setColorMaterial = function setColorMaterial(material, color) {
+          material == null ? void 0 : material.setProperty("mainColor", color);
+          material == null ? void 0 : material.setProperty("emissive", color);
+        };
+
+        return Target;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "mainColors", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "additionalColors", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "material", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "ParticlePrefab", [_dec5], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/TargetController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts', './ScoreController.ts', './Target.ts', './Torus.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Collider, Animation, Vec3, Component, Constants, ScoreController, Target, Torus;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Collider = module.Collider;
+      Animation = module.Animation;
+      Vec3 = module.Vec3;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      ScoreController = module.ScoreController;
+    }, function (module) {
+      Target = module.Target;
+    }, function (module) {
+      Torus = module.Torus;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3;
+
+      cclegacy._RF.push({}, "cf0dcC5VfdAsYnHNbWjOBC6", "TargetController", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var TargetController = exports('TargetController', (_dec = ccclass('TargetController'), _dec2 = property({
+        type: Target
+      }), _dec3 = property({
+        type: Collider
+      }), _dec4 = property({
+        type: Animation
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(TargetController, _Component);
+
+        function TargetController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "targets", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "TriggerCollider", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "Animation", _descriptor3, _assertThisInitialized(_this));
+
+          _this._scoreController = new ScoreController();
+          _this._currentTargetIndex = 0;
+          return _this;
+        }
+
+        var _proto = TargetController.prototype;
+
+        _proto.onLoad = function onLoad() {
+          Constants.target = this;
+        };
+
+        _proto.start = function start() {
+          this.targets.forEach(function (element) {
+            element.enabled = false;
+          });
+          this.enableRandomTarget();
+          this.TriggerCollider.on('onTriggerEnter', this.onTriggerEnter, this);
+        };
+
+        _proto.onDestroy = function onDestroy() {
+          this.TriggerCollider.off('onTriggerEnter', this.onTriggerEnter, this);
+        };
+
+        _proto.onTriggerEnter = function onTriggerEnter(event) {
+          var torus = event.otherCollider.getComponent(Torus);
+          this.onTrigger(torus, false);
+        };
+
+        _proto.onTrigger = function onTrigger(torus, test) {
+          var _this2 = this;
+
+          this.TriggerCollider.enabled = false;
+          var torus_rot_z = torus.node.eulerAngles.z;
+
+          this.targets[this._currentTargetIndex].PlayParticles(this.node.getWorldPosition(), torus_rot_z);
+
+          this.scheduleOnce(function () {
+            if (torus !== null && torus.Type === Constants.TORUS_TYPE.MAIN) {
+              Constants.gameController.addScore(Constants.ADD_SCORE);
+              Constants.gameController.PlayUX(Constants.UX_TORUS_HIT);
+              Constants.gameController.stopTraining();
+
+              _this2._scoreController.ShowScore(Constants.ADD_SCORE, new Vec3(_this2.node.worldPosition.x, _this2.node.worldPosition.y, 0));
+
+              Constants.ComplimentPopup.Show();
+              Constants.cameraController.PlayShakeAnimation();
+            } else if (torus.Type === Constants.TORUS_TYPE.OPPONENT) {
+              Constants.gameController.addBotScore(Constants.ADD_SCORE);
+            }
+
+            _this2.setNextPos(function () {
+              _this2.enableRandomTarget();
+            });
+          }, Constants.SPHERE_TRIGGER_DELAY);
+        };
+
+        _proto.setNextPos = function setNextPos(callback) {
+          var newPos_x = Constants.RandomFixedSeed.RandInArray(Constants.SPHERE_SPAWN_POS_X, this.node.position.x);
+          var newPos_y = Constants.RandomFixedSeed.RandInArray(Constants.SPHERE_SPAWN_POS_Y, this.node.position.y);
+          var newPos = new Vec3(newPos_x, newPos_y, 0);
+          this.node.setWorldPosition(newPos);
+          callback();
+        };
+
+        _proto.enableRandomTarget = function enableRandomTarget() {
+          var _this3 = this;
+
+          this.targets[this._currentTargetIndex].SetActive(false);
+
+          var index = Constants.RandomFixedSeed.Rand(this.targets.length);
+          this.targets[index].SetActive(true);
+          this._currentTargetIndex = index;
+          this.Animation.play(Constants.SPHERE_ENABLE_ANIMATION);
+          this.scheduleOnce(function () {
+            _this3.TriggerCollider.enabled = true;
+          }, 0.1);
+        };
+
+        return TargetController;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "targets", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "TriggerCollider", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "Animation", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/Torus.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts', './PoolManager.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Prefab, Node, AnimationComponent, ParticleSystem, RigidBody, Collider, Vec3, MeshRenderer, Component, Constants, PoolManager;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Prefab = module.Prefab;
+      Node = module.Node;
+      AnimationComponent = module.AnimationComponent;
+      ParticleSystem = module.ParticleSystem;
+      RigidBody = module.RigidBody;
+      Collider = module.Collider;
+      Vec3 = module.Vec3;
+      MeshRenderer = module.MeshRenderer;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      PoolManager = module.PoolManager;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5;
+
+      cclegacy._RF.push({}, "17747py+P5BmIqpsRq/Nhrt", "Torus", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var Torus = exports('Torus', (_dec = ccclass('Torus'), _dec2 = property({
+        type: Prefab
+      }), _dec3 = property({
+        type: Node
+      }), _dec4 = property({
+        type: Node
+      }), _dec5 = property({
+        type: AnimationComponent
+      }), _dec6 = property({
+        type: ParticleSystem
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(Torus, _Component);
+
+        function Torus() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "leaderPrefab", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "startArrow", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "torusMeshNode", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "torusLaunchEffect", _descriptor4, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "launchParticle", _descriptor5, _assertThisInitialized(_this));
+
+          _this.Type = Constants.TORUS_TYPE.MAIN;
+          _this._rigidBody = void 0;
+          _this._collider = [];
+          _this._isFirstLaunch = false;
+          _this._leaderNode = void 0;
+          _this._isLeader = void 0;
+          return _this;
+        }
+
+        var _proto = Torus.prototype;
+
+        _proto.onLoad = function onLoad() {
+          var _this$getComponentInC, _this$getComponentsIn;
+
+          this._rigidBody = (_this$getComponentInC = this.getComponentInChildren(RigidBody)) != null ? _this$getComponentInC : this.getComponent(RigidBody);
+          this._collider = (_this$getComponentsIn = this.getComponentsInChildren(Collider)) != null ? _this$getComponentsIn : this.getComponents(Collider);
+          this._rigidBody.useGravity = false;
+        };
+
+        _proto.start = function start() {
+          //this._rigidBody.useGravity = true;
+          if (Constants.gameController.GameMode !== Constants.GAME_MODE.SOLO) {
+            this.setPhysicsGroup();
+            this.initLeaderNode();
+
+            if (this.Type === Constants.TORUS_TYPE.OPPONENT) {
+              this.startArrow.active = false;
+            }
+          }
+
+          if (Constants.gameController.IsTraining) {
+            if (this.Type === Constants.TORUS_TYPE.OPPONENT) this.SetMeshEnabled(false);
+            this.startArrow.active = false;
+          }
+
+          for (var i = 0; i < this._collider.length; i++) {
+            this._collider[i].on('onCollisionEnter', this.onCollisionEnter, this);
+          }
+
+          Constants.gameController.node.on(Constants.GAME_EVENT.START_TOUCH, this.onStartTouch, this);
+        };
+
+        _proto.onDestroy = function onDestroy() {
+          for (var i = 0; i < this._collider.length; i++) {
+            this._collider[i].off('onCollisionEnter', this.onCollisionEnter, this);
+          }
+
+          Constants.gameController.node.off(Constants.GAME_EVENT.START_TOUCH, this.onStartTouch, this);
+        };
+
+        _proto.update = function update(dt) {
+          this.setLeaderNodePosition();
+        };
+
+        _proto.Launch = function Launch(direction, forceCoeff) {
+          if (forceCoeff === void 0) {
+            forceCoeff = 1;
+          }
+
+          if (!this._isFirstLaunch) {
+            this._rigidBody.useGravity = true;
+            this._isFirstLaunch = true;
+          }
+
+          if (this.Type === Constants.TORUS_TYPE.MAIN) {
+            this.torusLaunchEffect.play();
+            Constants.gameController.PlayUX(Constants.UX_TORUS_LAUNCH);
+            this.launchParticle.play();
+
+            if (window.blitzOnLaunchOpponentTorus !== undefined && forceCoeff == 1 && Constants.gameController.GameMode == Constants.GAME_MODE.PVP) {
+              window.blitzOnLaunchOpponentTorus(direction);
+            }
+          } else {
+            if (Constants.gameController.IsTraining) Constants.opponentTorus.SetMeshEnabled(true);
+          }
+
+          this._rigidBody.setLinearVelocity(new Vec3(0, 0, 0));
+
+          var dirVec = direction === Constants.MOVE_DIR.Left ? new Vec3(-0.3, 1, 0) : new Vec3(0.3, 1, 0);
+          var force = dirVec.multiplyScalar(Constants.TORUS_FORCE * forceCoeff);
+
+          this._rigidBody.applyForce(force);
+        };
+
+        _proto.SetLeader = function SetLeader(leader) {
+          this._isLeader = leader;
+        };
+
+        _proto.SetMeshEnabled = function SetMeshEnabled(enabled) {
+          var _this$node$getCompone, _this$_leaderNode$get;
+
+          var mesh = (_this$node$getCompone = this.node.getComponentInChildren(MeshRenderer)) != null ? _this$node$getCompone : this.node.getComponent(MeshRenderer);
+          mesh.enabled = enabled;
+          var leaderMesh = (_this$_leaderNode$get = this._leaderNode.getComponentInChildren(MeshRenderer)) != null ? _this$_leaderNode$get : this._leaderNode.getComponent(MeshRenderer);
+          leaderMesh.enabled = enabled;
+        };
+
+        _proto.initLeaderNode = function initLeaderNode() {
+          this._leaderNode = PoolManager.instance.getNode(this.leaderPrefab, this.node.parent);
+          this._leaderNode.active = false;
+          this._isLeader = false;
+        };
+
+        _proto.setLeaderNodePosition = function setLeaderNodePosition() {
+          if (this._leaderNode && this._isLeader) {
+            var pos = new Vec3(this.node.worldPosition.x, this.node.worldPosition.y + Constants.LEADER_POS_Y, this.node.worldPosition.z);
+
+            this._leaderNode.setPosition(pos);
+
+            this._leaderNode.active = true;
+          } else if (this._leaderNode.active) {
+            this._leaderNode.active = false;
+          }
+        };
+
+        _proto.onCollisionEnter = function onCollisionEnter(event) {
+          if (event.otherCollider.node.name == Constants.LEFT_BOARDER_NAME) {
+            this.Launch(Constants.MOVE_DIR.Right, Constants.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER);
+          } else if (event.otherCollider.node.name == Constants.RIGHT_BOARDER_NAME) {
+            this.Launch(Constants.MOVE_DIR.Left, Constants.TORUS_LAUNCH_FORCE_COEFF_ON_BOARDER);
+          }
+        };
+
+        _proto.onStartTouch = function onStartTouch() {
+          if (this.Type === Constants.TORUS_TYPE.MAIN) {
+            this.startArrow.active = false;
+          }
+        };
+
+        _proto.setPhysicsGroup = function setPhysicsGroup() {
+          if (this.Type === Constants.TORUS_TYPE.MAIN) this._rigidBody.setGroup(Constants.TORUS_PHYSICS_GROUP_MAIN);else this._rigidBody.setGroup(Constants.TORUS_PHYSICS_GROUP_OPPONENT);
+        };
+
+        return Torus;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "leaderPrefab", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "startArrow", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "torusMeshNode", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "torusLaunchEffect", [_dec5], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor5 = _applyDecoratedDescriptor(_class2.prototype, "launchParticle", [_dec6], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/TorusSpawner.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts', './Torus.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Prefab, Material, Texture2D, instantiate, MeshRenderer, Component, Constants, Torus;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Prefab = module.Prefab;
+      Material = module.Material;
+      Texture2D = module.Texture2D;
+      instantiate = module.instantiate;
+      MeshRenderer = module.MeshRenderer;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }, function (module) {
+      Torus = module.Torus;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
+
+      cclegacy._RF.push({}, "b87ab7Z4AxES7AvVg6+WCJC", "TorusSpawner", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var TorusSpawner = exports('TorusSpawner', (_dec = ccclass('TorusSpawner'), _dec2 = property({
+        type: Prefab
+      }), _dec3 = property({
+        type: Material
+      }), _dec4 = property({
+        type: Material
+      }), _dec5 = property({
+        type: Texture2D
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(TorusSpawner, _Component);
+
+        function TorusSpawner() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "torusPref", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "opponentMaterial", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "mainMaterial", _descriptor3, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "torusTextures", _descriptor4, _assertThisInitialized(_this));
+
+          return _this;
+        }
+
+        var _proto = TorusSpawner.prototype;
+
+        _proto.Spawn = function Spawn() {
+          var mainPos;
+          var oppPos;
+
+          if (Constants.gameController.IsMaster) {
+            mainPos = Constants.MAIN_TORUS_SPAWN_POS;
+            oppPos = Constants.OPPONENT_TORUS_SPAWN_POS;
+          } else {
+            mainPos = Constants.OPPONENT_TORUS_SPAWN_POS;
+            oppPos = Constants.MAIN_TORUS_SPAWN_POS;
+          }
+
+          if (Constants.gameController.GameMode === Constants.GAME_MODE.SOLO || Constants.gameController.IsTraining) {
+            mainPos = Constants.TORUS_SPAWN_CENTER_POS;
+          } //this.createMainTorus(new Vec3(0, 8, 0));
+
+
+          this.createMainTorus(mainPos);
+
+          if (Constants.gameController.GameMode !== Constants.GAME_MODE.SOLO) {
+            this.createOpponentTorus(oppPos);
+          }
+        };
+
+        _proto.createFakeTorus = function createFakeTorus(position) {
+          var mainTorus = instantiate(this.torusPref);
+          mainTorus.parent = this.node.parent;
+          mainTorus.position = position;
+          this.setMaterial(mainTorus, this.mainMaterial);
+          this.setRandomTexture(mainTorus, this.torusTextures);
+          Constants.fakeTorus = mainTorus.getComponent(Torus);
+          Constants.fakeTorus.Type = Constants.TORUS_TYPE.MAIN;
+        };
+
+        _proto.createOpponentTorus = function createOpponentTorus(position) {
+          var opponentTorus = instantiate(this.torusPref);
+          opponentTorus.parent = this.node.parent;
+          opponentTorus.position = position;
+          this.setMaterial(opponentTorus, this.opponentMaterial);
+          this.setRandomTexture(opponentTorus, this.torusTextures);
+          Constants.opponentTorus = opponentTorus.getComponent(Torus);
+          Constants.opponentTorus.Type = Constants.TORUS_TYPE.OPPONENT;
+        };
+
+        _proto.createMainTorus = function createMainTorus(position) {
+          var mainTorus = instantiate(this.torusPref);
+          mainTorus.parent = this.node.parent;
+          mainTorus.position = position;
+          this.setMaterial(mainTorus, this.mainMaterial);
+          this.setRandomTexture(mainTorus, this.torusTextures);
+          Constants.mainTorus = mainTorus.getComponent(Torus);
+          Constants.mainTorus.Type = Constants.TORUS_TYPE.MAIN;
+        };
+
+        _proto.setRandomTexture = function setRandomTexture(node, textures) {
+          var _node$getComponentInC, _mesh$getMaterial;
+
+          var mesh = (_node$getComponentInC = node.getComponentInChildren(MeshRenderer)) != null ? _node$getComponentInC : node.getComponent(MeshRenderer);
+          mesh == null ? void 0 : (_mesh$getMaterial = mesh.getMaterial(0)) == null ? void 0 : _mesh$getMaterial.setProperty("mainTexture", textures[Constants.RandomFixedSeed.Rand(textures.length)]); // mesh?.getMaterial(0)?.setProperty("mainTexture", textures[7]);
+        };
+
+        _proto.setMaterial = function setMaterial(node, material) {
+          var _node$getComponentInC2;
+
+          var mesh = (_node$getComponentInC2 = node.getComponentInChildren(MeshRenderer)) != null ? _node$getComponentInC2 : node.getComponent(MeshRenderer);
+          mesh == null ? void 0 : mesh.setMaterial(material, 0);
+        };
+
+        return TorusSpawner;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "torusPref", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "opponentMaterial", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "mainMaterial", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, "torusTextures", [_dec5], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return [];
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/TouchController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
+
+  var _inheritsLoose, cclegacy, _decorator, view, Node, Component, Constants;
+
+  return {
+    setters: [function (module) {
+      _inheritsLoose = module.inheritsLoose;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      view = module.view;
+      Node = module.Node;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _class;
+
+      cclegacy._RF.push({}, "824b510kfVBeryCRRW9bgk8", "TouchController", undefined);
+
+      var ccclass = _decorator.ccclass;
+      var TouchController = exports('TouchController', (_dec = ccclass('TouchController'), _dec(_class = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(TouchController, _Component);
+
+        function TouchController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+          _this._screenWidth = void 0;
+          _this._canTouch = true;
+          _this._touchTimer = 0;
+          return _this;
+        }
+
+        var _proto = TouchController.prototype;
+
+        _proto.start = function start() {
+          this._screenWidth = view.getVisibleSizeInPixel().width;
+        };
+
+        _proto.onEnable = function onEnable() {
+          this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
+        };
+
+        _proto.onDisable = function onDisable() {
+          this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
+        };
+
+        _proto.onTouchStart = function onTouchStart(touch, event) {
+          if (!this._canTouch) return;
+          Constants.gameController.node.emit(Constants.GAME_EVENT.START_TOUCH);
+          var touchPos = touch.getLocation();
+
+          if (touchPos.x > this._screenWidth / 2) {
+            var _Constants$mainTorus;
+
+            (_Constants$mainTorus = Constants.mainTorus) == null ? void 0 : _Constants$mainTorus.Launch(Constants.MOVE_DIR.Right);
+          } else {
+            var _Constants$mainTorus2;
+
+            (_Constants$mainTorus2 = Constants.mainTorus) == null ? void 0 : _Constants$mainTorus2.Launch(Constants.MOVE_DIR.Left);
+          }
+
+          this._canTouch = false;
+          this._touchTimer = 0;
+        };
+
+        _proto.update = function update(dt) {
+          this._touchTimer += dt;
+
+          if (!this._canTouch && this._touchTimer >= Constants.TOUCH_DELAY) {
+            this._canTouch = true;
+            this._touchTimer = 0;
+          }
+        };
+
+        return TouchController;
+      }(Component)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
+
+System.register("chunks:///_virtual/TrainingController.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './Constants.ts'], function (exports) {
+  'use strict';
+
+  var _applyDecoratedDescriptor, _inheritsLoose, _initializerDefineProperty, _assertThisInitialized, cclegacy, _decorator, Animation, Prefab, instantiate, Vec3, MeshRenderer, Vec4, Quat, Component, Constants;
+
+  return {
+    setters: [function (module) {
+      _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
+      _inheritsLoose = module.inheritsLoose;
+      _initializerDefineProperty = module.initializerDefineProperty;
+      _assertThisInitialized = module.assertThisInitialized;
+    }, function (module) {
+      cclegacy = module.cclegacy;
+      _decorator = module._decorator;
+      Animation = module.Animation;
+      Prefab = module.Prefab;
+      instantiate = module.instantiate;
+      Vec3 = module.Vec3;
+      MeshRenderer = module.MeshRenderer;
+      Vec4 = module.Vec4;
+      Quat = module.Quat;
+      Component = module.Component;
+    }, function (module) {
+      Constants = module.Constants;
+    }],
+    execute: function () {
+      var _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3;
+
+      cclegacy._RF.push({}, "e31b72Fd4lI0YTsCm/CLfIh", "TrainingController", undefined);
+
+      var ccclass = _decorator.ccclass,
+          property = _decorator.property;
+      var TrainingController = exports('TrainingController', (_dec = ccclass('TrainingController'), _dec2 = property({
+        type: Animation
+      }), _dec3 = property({
+        type: Animation
+      }), _dec4 = property({
+        type: Prefab
+      }), _dec(_class = (_class2 = /*#__PURE__*/function (_Component) {
+        _inheritsLoose(TrainingController, _Component);
+
+        function TrainingController() {
+          var _this;
+
+          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+
+          _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+
+          _initializerDefineProperty(_this, "leftButtonAnim", _descriptor, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "rightButtonAnim", _descriptor2, _assertThisInitialized(_this));
+
+          _initializerDefineProperty(_this, "arrowPref", _descriptor3, _assertThisInitialized(_this));
+
+          _this.currentActiveAnimDir = void 0;
+          _this.targetArrow = void 0;
+          return _this;
+        }
+
+        var _proto = TrainingController.prototype;
+
+        _proto.start = function start() {
+          this.targetArrow = instantiate(this.arrowPref);
+          this.targetArrow.parent = Constants.target.node;
+          this.targetArrow.scale = new Vec3(1, 1, 1);
+          this.targetArrow.active = true;
+          Constants.gameController.node.on(Constants.GAME_EVENT.START_TOUCH, this.onStartTouch, this);
+        };
+
+        _proto.swapAnim = function swapAnim(dir) {
+          this.currentActiveAnimDir = dir;
+
+          switch (dir) {
+            case Constants.MOVE_DIR.Left:
+              this.leftButtonAnim.play("training_button_left");
+              this.rightButtonAnim.play("training_button_idle");
+              break;
+
+            case Constants.MOVE_DIR.Right:
+              this.leftButtonAnim.play("training_button_idle");
+              this.rightButtonAnim.play("training_button_right");
+              break;
+
+            default:
+              console.log("Training dir not found");
+              return;
+          }
+        };
+
+        _proto.onDisable = function onDisable() {
+          var _this$targetArrow; // this.leftButtonAnim.node.destroy()
+          // this.rightButtonAnim.node.destroy()
+
+
+          this.leftButtonAnim.node.active = false;
+          this.rightButtonAnim.node.active = false;
+          (_this$targetArrow = this.targetArrow) == null ? void 0 : _this$targetArrow.destroy();
+          Constants.gameController.node.off(Constants.GAME_EVENT.START_TOUCH, this.onStartTouch, this);
+        };
+
+        _proto.onStartTouch = function onStartTouch() {};
+
+        _proto.updateButtonsState = function updateButtonsState() {
+          var dir = 0;
+
+          if (Constants.mainTorus.node.position.x > Constants.target.node.position.x) {
+            dir = Constants.MOVE_DIR.Left;
+          } else {
+            dir = Constants.MOVE_DIR.Right;
+          }
+
+          if (dir !== this.currentActiveAnimDir) this.swapAnim(dir);
+        };
+
+        _proto.setTargetArrowAlpha = function setTargetArrowAlpha(alpha) {
+          var _this$targetArrow$get, _mesh$getMaterial;
+
+          var mesh = (_this$targetArrow$get = this.targetArrow.getComponentInChildren(MeshRenderer)) != null ? _this$targetArrow$get : this.targetArrow.getComponent(MeshRenderer);
+          (_mesh$getMaterial = mesh.getMaterial(0)) == null ? void 0 : _mesh$getMaterial.setProperty('albedo', new Vec4(0, 0, 0, alpha));
+        };
+
+        _proto.updateTargetArrow = function updateTargetArrow() {
+          if (this.targetArrow === null) return;
+          var tempQuat = new Quat();
+
+          if (Constants.mainTorus.node.worldPosition.y > Constants.target.node.position.y) {
+            this.targetArrow.lookAt(Constants.mainTorus.node.worldPosition, new Vec3(0, 0, 1));
+            Quat.toEuler(tempQuat, this.targetArrow.rotation);
+            this.targetArrow.setRotationFromEuler(new Vec3(0, 0, tempQuat.z));
+          } else {
+            this.targetArrow.lookAt(Constants.mainTorus.node.worldPosition, new Vec3(0, 0, -1));
+            Quat.toEuler(tempQuat, this.targetArrow.rotation);
+            this.targetArrow.setRotationFromEuler(new Vec3(0, 0, tempQuat.z + 180));
+          }
+
+          var distance = Vec3.distance(Constants.mainTorus.node.worldPosition, Constants.target.node.worldPosition);
+
+          if (distance >= 8) {
+            this.setTargetArrowAlpha(1);
+          } else if (distance <= 2) {
+            this.setTargetArrowAlpha(0);
+          } else {
+            this.setTargetArrowAlpha(distance / 8);
+          }
+        };
+
+        _proto.update = function update(deltaTime) {
+          this.updateButtonsState();
+          this.updateTargetArrow();
+        };
+
+        return TrainingController;
+      }(Component), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "leftButtonAnim", [_dec2], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, "rightButtonAnim", [_dec3], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      }), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, "arrowPref", [_dec4], {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        initializer: function initializer() {
+          return null;
+        }
+      })), _class2)) || _class));
+
+      cclegacy._RF.pop();
+    }
+  };
+});
 
 (function(r) {
   r('virtual:///prerequisite-imports/main', 'chunks:///_virtual/main'); 
@@ -52,3 +2199,4 @@ System.register("chunks:///_virtual/TrainingController.ts",["./rollupPluginModLo
     };
     });
 });
+//# sourceMappingURL=index.js.map

@@ -1,4 +1,10 @@
-System.register("chunks:///_virtual/internal",[],(function(){"use strict";return{execute:function(){}}}));
+System.register("chunks:///_virtual/internal", [], function () {
+  'use strict';
+
+  return {
+    execute: function () {}
+  };
+});
 
 (function(r) {
   r('virtual:///prerequisite-imports/internal', 'chunks:///_virtual/internal'); 
@@ -18,3 +24,4 @@ System.register("chunks:///_virtual/internal",[],(function(){"use strict";return
     };
     });
 });
+//# sourceMappingURL=index.js.map

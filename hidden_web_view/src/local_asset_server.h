@@ -2,6 +2,13 @@
 #include <thread>
 #include "httplib.h"
 #include <dmsdk/dlib/log.h>
+#include <android/log.h>
+
+#define LOG_TAG "asset-web-server"
+#define LOGI(...) \
+((void)__android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__))
+#define LOGW(...) \
+((void)__android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__))
 
 using namespace httplib;
 

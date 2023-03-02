@@ -12,18 +12,21 @@ public class DefoldWebViewInterface {
         Log.d(TAG, "DefoldWebViewInterface.executeScript: " + js);
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.executeScript: runOnUiThread()");
             FakeWebViewActivity.executeScript(js, id);
         });
     }
 
     public void loadGame(String gamePath, int id) {
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.loadGame: runOnUiThread()");
             FakeWebViewActivity.loadGame(gamePath, id);
         });
     }
 
     public void loadWebPage(String gamePath, int id) {
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.loadWebPage: runOnUiThread()");
             FakeWebViewActivity.loadWebPage(gamePath, id);
         });
     }
@@ -34,6 +37,7 @@ public class DefoldWebViewInterface {
         FakeWebViewActivity.defoldWebViewInterface = this;
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.changeVisibility: runOnUiThread()");
             FakeWebViewActivity.changeVisibility(visible);
         });
     }
@@ -42,6 +46,7 @@ public class DefoldWebViewInterface {
         Log.d(TAG, "DefoldWebViewInterface.setDebugEnabled flag = " + flag);
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.setDebugEnabled: runOnUiThread()");
             FakeWebViewActivity.setDebugEnabled(flag);
         });
     }
@@ -50,6 +55,7 @@ public class DefoldWebViewInterface {
         Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor");
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor: runOnUiThread()");
             FakeWebViewActivity.setTouchInterceptor(height, width, x, y);
         });
     }
@@ -59,6 +65,7 @@ public class DefoldWebViewInterface {
             ", height = " + height + ", x = " + x + ", y = " + y);
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.setPositionAndSize: runOnUiThread()");
             FakeWebViewActivity.setPositionAndSize(height, width, x, y);
         });
     }
@@ -67,6 +74,7 @@ public class DefoldWebViewInterface {
         Log.d(TAG, "DefoldWebViewInterface.acceptTouchEvents");
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.acceptTouchEvents: runOnUiThread()");
             FakeWebViewActivity.acceptTouchEvents(accept);
         });
     }

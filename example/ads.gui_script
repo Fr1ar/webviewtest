@@ -66,15 +66,14 @@ function on_html_loaded()
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
 
-    
-    local js = "__Start(" .. param_string .. ")"
-    print("HiddenWebView execute_script: "..js)
-    hidden_web_view.execute_script(js)
-
     local js = "document.write('<h2>Hello dude!</h2><p>Have a nice evening!</p>');"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
     ]]--
+
+    local js = "__Start(" .. param_string .. ")"
+    print("HiddenWebView execute_script: "..js)
+    hidden_web_view.execute_script(js)
     
 end
 
@@ -88,6 +87,7 @@ function on_webview_callback(id, type, data)
 
     if type == hidden_web_view.CALLBACK_RESULT_GAME_LOADED then
         on_html_loaded()
+    --[[
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_LOADING then
         print("HiddenWebView: CALLBACK_RESULT_GAME_LOADING")
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_ERROR then
@@ -102,6 +102,7 @@ function on_webview_callback(id, type, data)
         on_js_callback(data)
     else
         print("HiddenWebView: Unknown callback type")
+    ]]--
     end
 end
 
