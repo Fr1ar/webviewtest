@@ -197,7 +197,7 @@ public class FakeWebViewActivity extends Activity {
         new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
             new Runnable() {
                 public void run() {
-                    openWebViewActivity();
+                    // openWebViewActivity();
                 }
             },
         5000);

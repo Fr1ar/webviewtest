@@ -61,7 +61,7 @@
             android:launchMode="singleTop"
             android:exported="false"
             android:screenOrientation="{{orientation-support}}"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+            android:theme="@style/Theme.AppCompat.Translucent">
 
             <meta-data
                 android:name="android.app.lib_name"
