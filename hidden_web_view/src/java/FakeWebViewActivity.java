@@ -336,12 +336,16 @@ public class FakeWebViewActivity extends Activity {
         }
     }
 
-    private static float dpToPx(double dp) {
+    private static int dpToPx(double dp) {
+        return (int) dp;
+
+        /*
         return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 (float) dp,
                 CurrentActivityAwareApplication.currentlyOpenedActivity.getResources().getDisplayMetrics()
         );
+        */
     }
 
     public static void executeScript(String js, int id) {
@@ -394,7 +398,7 @@ public class FakeWebViewActivity extends Activity {
         }
     }
 
-    public static void setTouchInterceptor(double height, double width, double x, double y) {
+    public static void setTouchInterceptor(double x, double y, double width, double height) {
         Log.d(TAG, "FakeWebViewActivity.setTouchInterceptor");
 
         if (touchInterceptorView != null) {
@@ -413,10 +417,10 @@ public class FakeWebViewActivity extends Activity {
 
         touchInterceptorViewParams = new WindowManager.LayoutParams();
         touchInterceptorViewParams.gravity = Gravity.CENTER; // Gravity.TOP | Gravity.START;
-        touchInterceptorViewParams.x = (int) dpToPx(screenWidth * x);
-        touchInterceptorViewParams.y = (int) dpToPx(screenHeight * y);
-        touchInterceptorViewParams.width = (int) dpToPx(screenWidth * width);
-        touchInterceptorViewParams.height = (int) dpToPx(screenHeight * height);
+        touchInterceptorViewParams.x = dpToPx(screenWidth * x);
+        touchInterceptorViewParams.y = dpToPx(screenHeight * y);
+        touchInterceptorViewParams.width = dpToPx(screenWidth * width);
+        touchInterceptorViewParams.height = dpToPx(screenHeight * height);
         touchInterceptorViewParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         touchInterceptorViewParams.alpha = 0.5f;
         touchInterceptorViewParams.format = PixelFormat.TRANSLUCENT;
@@ -425,7 +429,7 @@ public class FakeWebViewActivity extends Activity {
         wm.addView(touchInterceptorView, touchInterceptorViewParams);
     }
 
-    public static void setPositionAndSize(double height, double width, double x, double y) {
+    public static void setPositionAndSize(double x, double y, double width, double height) {
         Log.d(TAG, "FakeWebViewActivity.setPositionAndSize height = " + height + ", width = " + width +
             ", x = " + x + ", y = " + y);
 
@@ -439,10 +443,10 @@ public class FakeWebViewActivity extends Activity {
             ", screenHeight = " + screenHeight);
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) htmlGameView.getLayoutParams();
-        params.height = (int)(screenHeight * height);
-        params.width = (int)(screenWidth * width);
+        params.width = dpToPx(screenWidth * width);
+        params.height = dpToPx(screenHeight * height);
         params.gravity = Gravity.TOP | Gravity.START;
-        params.setMargins((int)(screenWidth * x), (int)(screenHeight * y), 0, 0);
+        params.setMargins(dpToPx(screenWidth * x), dpToPx(screenHeight * y), 0, 0);
 
         htmlGameView.setLayoutParams(params);
         htmlGameView.requestLayout();

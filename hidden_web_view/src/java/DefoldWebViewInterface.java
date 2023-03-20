@@ -51,22 +51,22 @@ public class DefoldWebViewInterface {
         });
     }
 
-    public void setTouchInterceptor(double width, double height, double x, double y) {
+    public void setTouchInterceptor(double x, double y, double width, double height) {
         Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor");
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
             Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor: runOnUiThread()");
-            FakeWebViewActivity.setTouchInterceptor(height, width, x, y);
+            FakeWebViewActivity.setTouchInterceptor(x, y, width, height);
         });
     }
 
-    public void setPositionAndSize(double width, double height, double x, double y) {
+    public void setPositionAndSize(double x, double y, double width, double height) {
         Log.d(TAG, "DefoldWebViewInterface.setPositionAndSize width = " + width + 
             ", height = " + height + ", x = " + x + ", y = " + y);
 
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
             Log.d(TAG, "DefoldWebViewInterface.setPositionAndSize: runOnUiThread()");
-            FakeWebViewActivity.setPositionAndSize(height, width, x, y);
+            FakeWebViewActivity.setPositionAndSize(x, y, width, height);
         });
     }
 

@@ -57,16 +57,12 @@ function on_html_loaded()
     }
 
     local param_string = json.encode(params)
-    local touch_area_height = 0.1
+    local touch_area_height = 0.6
     
     hidden_web_view.set_touch_interceptor_area(0, 0, 1, touch_area_height)
 
     --[[
     local js = "document.write('<h2>Hello World!</h2><p>Have a nice day!</p>');"
-    print("HiddenWebView execute_script: "..js)
-    hidden_web_view.execute_script(js)
-
-    local js = "document.write('<h2>Hello dude!</h2><p>Have a nice evening!</p>');"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
     ]]--
@@ -87,7 +83,6 @@ function on_webview_callback(id, type, data)
 
     if type == hidden_web_view.CALLBACK_RESULT_GAME_LOADED then
         on_html_loaded()
-    --[[
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_LOADING then
         print("HiddenWebView: CALLBACK_RESULT_GAME_LOADING")
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_ERROR then
@@ -102,7 +97,6 @@ function on_webview_callback(id, type, data)
         on_js_callback(data)
     else
         print("HiddenWebView: Unknown callback type")
-    ]]--
     end
 end
 
@@ -111,9 +105,7 @@ function create_webview()
     print("HiddenWebView: STEP 1")
     
     local instance = hidden_web_view.create(function(self_, id, type, data)
-
-        print("HiddenWebView: STEP on_created")
-        
+        print("HiddenWebView: STEP 1: on_created callback")
         on_webview_callback(id, type, data)
     end)
 
@@ -130,18 +122,12 @@ function create_webview()
     
     hidden_web_view.match_screen_size()
 
-
     print("HiddenWebView: STEP 4")
-
-    -- hidden_web_view.set_touch_interceptor_area(50, 50, 200, 300)
-    -- hidden_web_view.set_position_and_size(50, 50, 200, 300)
-
-    print("HiddenWebView: STEP 5")
 
     hidden_web_view.change_visibility(1) -- android only - open
     hidden_web_view.set_debug_enabled(1) -- android only - set debug for chrome
 
-    print("HiddenWebView: STEP 6")
+    print("HiddenWebView: STEP 5")
 
     hidden_web_view.add_javascript_channel("logging")
     hidden_web_view.add_javascript_channel("_OnNewScore")
@@ -153,12 +139,12 @@ function create_webview()
     hidden_web_view.add_javascript_channel("_OnConsole")
     hidden_web_view.add_javascript_channel("_OnUX")
     
-    print("HiddenWebView: STEP 7")
+    print("HiddenWebView: STEP 6")
     
     hidden_web_view.open_game("main.html")
     hidden_web_view.set_accept_touch_events(1)
 
-    print("HiddenWebView: STEP 8")
+    print("HiddenWebView: STEP 7")
     
 end
 

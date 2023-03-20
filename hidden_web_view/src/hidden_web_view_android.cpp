@@ -112,7 +112,7 @@ namespace hiddenWebView {
 
 	int platform_SetPositionAndSize(lua_State* luaState, double x, double y, double width, double height) {
 		JNIEnv* env = Attach();
-		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.setPositionAndSizeMethod, width, height, x, y);
+		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.setPositionAndSizeMethod, x, y, width, height);
 		Detach();
 		
 		return 0;
@@ -120,7 +120,7 @@ namespace hiddenWebView {
 
 	int platform_SetTouchInterceptorArea(lua_State* luaState, double x, double y, double width, double height) {
 		JNIEnv* env = Attach();
-		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.setTouchInterceptorAreaMethod, width, height, x, y);
+		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.setTouchInterceptorAreaMethod, x, y, width, height);
 		Detach();
 
 		return 0;

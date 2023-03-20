@@ -54,6 +54,9 @@
             android:name="android.notch_support"
             android:value="true" />
 
+        <meta-data
+            android:name="alpha.transparency"
+            android:value="true" />
 
         <activity
             android:label="{{project.title}}"
