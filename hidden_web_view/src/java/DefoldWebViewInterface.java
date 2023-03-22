@@ -17,6 +17,15 @@ public class DefoldWebViewInterface {
         });
     }
 
+    public void addJavascriptChannel(String channel, int id) {
+        Log.d(TAG, "MMMMMM DefoldWebViewInterface.addJavascriptChannel, channel = " + channel);
+
+        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
+            Log.d(TAG, "DefoldWebViewInterface.addJavascriptChannel: runOnUiThread()");
+            FakeWebViewActivity.addJavascriptChannel(channel);
+        });
+    }
+
     public void loadGame(String gamePath, int id) {
         CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
             Log.d(TAG, "DefoldWebViewInterface.loadGame: runOnUiThread()");

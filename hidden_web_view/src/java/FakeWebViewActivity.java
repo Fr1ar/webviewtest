@@ -287,19 +287,6 @@ public class FakeWebViewActivity extends Activity {
         htmlGameView.setHapticFeedbackEnabled(true);
         htmlGameView.requestFocusFromTouch();
 
-        htmlGameView.addJavascriptInterface(
-            new JavaScriptInterface(
-                this, 
-                (type, data) -> {
-                        
-                    Log.d(TAG, "JavaScriptInterface(type, data)");
-
-                    defoldWebViewInterface.onScriptCallback(type, data);
-                }
-            ), 
-            "defoldHandler"
-        );
-
         customWebChromeClient = new CustomWebChromeClient(this);
         customWebViewClient = new CustomWebViewClient(this);
 
@@ -355,6 +342,20 @@ public class FakeWebViewActivity extends Activity {
         htmlGameView.evaluateJavascript(js, value -> defoldWebViewInterface.onScriptFinished(value, id));
     }
 
+    public static void addJavascriptChannel(String channel) {
+        Log.d(TAG, "MMMMMM FakeWebViewActivity.addJavascriptChannel: " + channel);
+        
+        JavaScriptInterface js = new JavaScriptInterface(
+            CurrentActivityAwareApplication.currentlyOpenedActivity, 
+            (message) -> {
+                Log.d(TAG, "JavaScriptInterface(channel, message), channel = " + channel + ", message = " + message);
+                defoldWebViewInterface.onScriptCallback(channel, message);
+            }
+        );
+        
+        htmlGameView.addJavascriptInterface(js, channel);
+    }
+
     public static void loadGame(String gamePath, int id) {
 
         Log.d(TAG, "FakeWebViewActivity.loadGame");
@@ -365,7 +366,7 @@ public class FakeWebViewActivity extends Activity {
         htmlGameView.loadUrl("http://localhost:8808/" + gamePath);
 
         // String strData = "<html><head></head><body><div style='color:red'>HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO</div></body></html>";
-        // String strData = "<html>\r\n<head>\r\n\t<style>\r\n\t*,html,body {\r\n\t\twidth: 100%;\r\n\t\theight: 100%;\r\n\t\tmin-width: 100%;\r\n\t\tmin-height: 100%;\r\n\t\tpadding: 0;\r\n\t\tmargin: 0;\r\n\t}\r\n\tcanvas {\r\n\t\tbackground: white;\r\n\t}\r\n\t</style>\r\n\t<script>\r\n\t// https://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html\r\n\r\n\tfunction init() {\r\n\t\t// Set up the canvas\r\n\t\tvar canvas = document.getElementById(\"canvas\");\r\n\t\tvar ctx = canvas.getContext(\"2d\");\r\n\r\n\t\t// Get a regular interval for drawing to the screen\r\n\t\twindow.requestAnimFrame = (function (callback) {\r\n\t\t\treturn window.requestAnimationFrame ||\r\n\t\t\t\t\t\twindow.webkitRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.mozRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.oRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.msRequestAnimationFrame ||\r\n\t\t\t\t\t\tfunction (callback) {\r\n\t\t\t\t\t\t\twindow.setTimeout(callback, 1000/60);\r\n\t\t\t\t\t\t};\r\n\t\t})();\r\n\r\n\t\tfunction resizeCanvas() {\r\n\t\t\tcanvas.width = window.innerWidth;\r\n\t\t\tcanvas.height = window.innerHeight;\r\n\r\n\t\t\t/**\r\n\t\t\t * Your drawings need to be inside this function otherwise they will be reset when\r\n\t\t\t * you resize the browser window and the canvas goes will be cleared.\r\n\t\t\t */\r\n\t\t\trenderCanvas();\r\n\r\n\t\t\tctx.font = \"36px serif\";\r\n\t\t\tctx.fillText(\"THIS IS WEBVIEW\", 25, 150);\r\n\t\t}\r\n\t    resizeCanvas();\r\n\t    window.addEventListener('resize', resizeCanvas, false);\r\n\r\n\t\t// Set up mouse events for drawing\r\n\t\tvar drawing = false;\r\n\t\tvar mousePos = { x:0, y:0 };\r\n\t\tvar lastPos = mousePos;\r\n\r\n\t\tcanvas.addEventListener(\"mousedown\", function (e) {\r\n\t\t\tdrawing = true;\r\n\t\t\tlastPos = getMousePos(canvas, e);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"mouseup\", function (e) {\r\n\t\t\tdrawing = false;\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"mousemove\", function (e) {\r\n\t\t\tmousePos = getMousePos(canvas, e);\r\n\t\t}, false);\r\n\r\n\t\t// Set up touch events for mobile, etc\r\n\t\tcanvas.addEventListener(\"touchstart\", function (e) {\r\n\t\t\tmousePos = getTouchPos(canvas, e);\r\n\t\t\tvar touch = e.touches[0];\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mousedown\", {\r\n\t\t\t\tclientX: touch.clientX,\r\n\t\t\t\tclientY: touch.clientY\r\n\t\t\t});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"touchend\", function (e) {\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mouseup\", {});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"touchmove\", function (e) {\r\n\t\t\tvar touch = e.touches[0];\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mousemove\", {\r\n\t\t\t\tclientX: touch.clientX,\r\n\t\t\t\tclientY: touch.clientY\r\n\t\t\t});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\r\n\t\t// Prevent scrolling when touching the canvas\r\n\t\tdocument.body.addEventListener(\"touchstart\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\t\tdocument.body.addEventListener(\"touchend\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\t\tdocument.body.addEventListener(\"touchmove\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\r\n\t\t// Get the position of the mouse relative to the canvas\r\n\t\tfunction getMousePos(canvasDom, mouseEvent) {\r\n\t\t\tvar rect = canvasDom.getBoundingClientRect();\r\n\t\t\treturn {\r\n\t\t\t\tx: mouseEvent.clientX - rect.left,\r\n\t\t\t\ty: mouseEvent.clientY - rect.top\r\n\t\t\t};\r\n\t\t}\r\n\r\n\t\t// Get the position of a touch relative to the canvas\r\n\t\tfunction getTouchPos(canvasDom, touchEvent) {\r\n\t\t\tvar rect = canvasDom.getBoundingClientRect();\r\n\t\t\treturn {\r\n\t\t\t\tx: touchEvent.touches[0].clientX - rect.left,\r\n\t\t\t\ty: touchEvent.touches[0].clientY - rect.top\r\n\t\t\t};\r\n\t\t}\r\n\r\n\t\t// Draw to the canvas\r\n\t\tfunction renderCanvas() {\r\n\t\t\tif (drawing) {\r\n\t\t\t\tctx.moveTo(lastPos.x, lastPos.y);\r\n\t\t\t\tctx.lineTo(mousePos.x, mousePos.y);\r\n\t\t\t\tctx.stroke();\r\n\t\t\t\tlastPos = mousePos;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tfunction clearCanvas() {\r\n\t\t\tcanvas.width = canvas.width;\r\n\t\t}\r\n\r\n\t\t// Allow for animation\r\n\t\t(function drawLoop () {\r\n\t\t\trequestAnimFrame(drawLoop);\r\n\t\t\trenderCanvas();\r\n\t\t})();\r\n\t}\r\n\r\n\t// document.addEventListener(\"click\", function(event) {\r\n\tdocument.addEventListener(\"DOMContentLoaded\", function(event) {\r\n\t\tinit();\r\n\t});\r\n\t</script>\r\n</head>\r\n<body>\r\n\t<canvas id=\"canvas\">\r\n\t  Your browser does not support canvas element.\r\n\t</canvas>\r\n</body>\r\n</html>";
+        // String strData = "<html>\r\n<head>\r\n\t<style>\r\n\t*,html,body {\r\n\t\twidth: 100%;\r\n\t\theight: 100%;\r\n\t\tmin-width: 100%;\r\n\t\tmin-height: 100%;\r\n\t\tpadding: 0;\r\n\t\tmargin: 0;\r\n\t}\r\n\tcanvas {\r\n\t\tbackground: white;\r\n\t}\r\n\t</style>\r\n\t<script>\r\n\tvar local = true\r\n\tfunction makeParams(params) {\r\n\t\treturn JSON.stringify({\r\n\t\t\t\"is_local\" : local,\r\n\t\t\t\"params\" : params\r\n\t\t});\r\n\t}\r\n    function blitzOnSceneLoaded() {\r\n\t\tconsole.log('OnSceneLoaded');\r\n\t\tif (window._OnSceneLoaded !== undefined) {\r\n\t\t\twindow._OnSceneLoaded.postMessage(makeParams('0'));\r\n\t\t}\r\n\t}\r\n\r\n\t// https://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html\r\n\r\n\tfunction init() {\r\n\t\t// Set up the canvas\r\n\t\tvar canvas = document.getElementById(\"canvas\");\r\n\t\tvar ctx = canvas.getContext(\"2d\");\r\n\r\n\t\t// Get a regular interval for drawing to the screen\r\n\t\twindow.requestAnimFrame = (function (callback) {\r\n\t\t\treturn window.requestAnimationFrame ||\r\n\t\t\t\t\t\twindow.webkitRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.mozRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.oRequestAnimationFrame ||\r\n\t\t\t\t\t\twindow.msRequestAnimationFrame ||\r\n\t\t\t\t\t\tfunction (callback) {\r\n\t\t\t\t\t\t\twindow.setTimeout(callback, 1000/60);\r\n\t\t\t\t\t\t};\r\n\t\t})();\r\n\r\n\t\tfunction resizeCanvas() {\r\n\t\t\tcanvas.width = window.innerWidth;\r\n\t\t\tcanvas.height = window.innerHeight;\r\n\r\n\t\t\t/**\r\n\t\t\t * Your drawings need to be inside this function otherwise they will be reset when\r\n\t\t\t * you resize the browser window and the canvas goes will be cleared.\r\n\t\t\t */\r\n\t\t\trenderCanvas();\r\n\r\n\t\t\tctx.font = \"36px serif\";\r\n\t\t\tctx.fillText(\"THIS IS WEBVIEW\", 25, 150);\r\n\t\t}\r\n\t    resizeCanvas();\r\n\t    window.addEventListener('resize', resizeCanvas, false);\r\n\r\n\t\t// Set up mouse events for drawing\r\n\t\tvar drawing = false;\r\n\t\tvar mousePos = { x:0, y:0 };\r\n\t\tvar lastPos = mousePos;\r\n\r\n\t\tcanvas.addEventListener(\"mousedown\", function (e) {\r\n\t\t\tdrawing = true;\r\n\t\t\tlastPos = getMousePos(canvas, e);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"mouseup\", function (e) {\r\n\t\t\tdrawing = false;\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"mousemove\", function (e) {\r\n\t\t\tmousePos = getMousePos(canvas, e);\r\n\t\t}, false);\r\n\r\n\t\t// Set up touch events for mobile, etc\r\n\t\tcanvas.addEventListener(\"touchstart\", function (e) {\r\n\t\t\tmousePos = getTouchPos(canvas, e);\r\n\t\t\tvar touch = e.touches[0];\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mousedown\", {\r\n\t\t\t\tclientX: touch.clientX,\r\n\t\t\t\tclientY: touch.clientY\r\n\t\t\t});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"touchend\", function (e) {\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mouseup\", {});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\t\tcanvas.addEventListener(\"touchmove\", function (e) {\r\n\t\t\tvar touch = e.touches[0];\r\n\t\t\tvar mouseEvent = new MouseEvent(\"mousemove\", {\r\n\t\t\t\tclientX: touch.clientX,\r\n\t\t\t\tclientY: touch.clientY\r\n\t\t\t});\r\n\t\t\tcanvas.dispatchEvent(mouseEvent);\r\n\t\t}, false);\r\n\r\n\t\t// Prevent scrolling when touching the canvas\r\n\t\tdocument.body.addEventListener(\"touchstart\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\t\tdocument.body.addEventListener(\"touchend\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\t\tdocument.body.addEventListener(\"touchmove\", function (e) {\r\n\t\t\tif (e.target == canvas) {\r\n\t\t\t\te.preventDefault();\r\n\t\t\t}\r\n\t\t}, {passive: false});\r\n\r\n\t\t// Get the position of the mouse relative to the canvas\r\n\t\tfunction getMousePos(canvasDom, mouseEvent) {\r\n\t\t\tvar rect = canvasDom.getBoundingClientRect();\r\n\t\t\treturn {\r\n\t\t\t\tx: mouseEvent.clientX - rect.left,\r\n\t\t\t\ty: mouseEvent.clientY - rect.top\r\n\t\t\t};\r\n\t\t}\r\n\r\n\t\t// Get the position of a touch relative to the canvas\r\n\t\tfunction getTouchPos(canvasDom, touchEvent) {\r\n\t\t\tvar rect = canvasDom.getBoundingClientRect();\r\n\t\t\treturn {\r\n\t\t\t\tx: touchEvent.touches[0].clientX - rect.left,\r\n\t\t\t\ty: touchEvent.touches[0].clientY - rect.top\r\n\t\t\t};\r\n\t\t}\r\n\r\n\t\t// Draw to the canvas\r\n\t\tfunction renderCanvas() {\r\n\t\t\tif (drawing) {\r\n\t\t\t\tctx.moveTo(lastPos.x, lastPos.y);\r\n\t\t\t\tctx.lineTo(mousePos.x, mousePos.y);\r\n\t\t\t\tctx.stroke();\r\n\t\t\t\tlastPos = mousePos;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\tfunction clearCanvas() {\r\n\t\t\tcanvas.width = canvas.width;\r\n\t\t}\r\n\r\n\t\t// Allow for animation\r\n\t\t(function drawLoop () {\r\n\t\t\trequestAnimFrame(drawLoop);\r\n\t\t\trenderCanvas();\r\n\t\t})();\r\n\t}\r\n\r\n\t// document.addEventListener(\"click\", function(event) {\r\n\tdocument.addEventListener(\"DOMContentLoaded\", function(event) {\r\n\t\tinit();\r\n\t\tblitzOnSceneLoaded();\r\n\t});\r\n\t</script>\r\n</head>\r\n<body>\r\n\t<canvas id=\"canvas\">\r\n\t  Your browser does not support canvas element.\r\n\t</canvas>\r\n</body>\r\n</html>";
         // htmlGameView.loadData(strData, "text/html", "UTF-8");
     }
 
@@ -583,31 +584,28 @@ public class FakeWebViewActivity extends Activity {
 
 
 interface JavaScriptHandler {
-  void handle(String messageType, String payload);
+  void postMessage(String message);
 }
 
 class JavaScriptInterface {
-  private Activity сontext;
+  private Activity activity;
   private JavaScriptHandler handler;
 
-  JavaScriptInterface(Activity activity, JavaScriptHandler handler) {
-
+  JavaScriptInterface(Activity activity,  JavaScriptHandler handler) {
+    
     Log.d(FakeWebViewActivity.TAG, "JavaScriptInterface");
 
-    сontext = activity;
+    this.activity = activity;
     this.handler = handler;
   }
 
   @JavascriptInterface
-  public void handle(String messageType, String payload) {
-
-    Log.d(FakeWebViewActivity.TAG, "JavaScriptInterface.handle");
-
-    this.сontext.runOnUiThread(() -> {
-      handler.handle(messageType, payload);
+  public void postMessage(String message) {
+    Log.d(FakeWebViewActivity.TAG, "JavaScriptInterface.postMessage, message = " + message);
+    
+    this.activity.runOnUiThread(() -> {
+      handler.postMessage(message);
     });
   }
 }
-
-
 

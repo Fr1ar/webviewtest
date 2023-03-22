@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
 
@@ -56,5 +57,131 @@
     System.import('./index.js').catch(function(err) { console.error(err); })
 </script>
 
+<script>
+  var local = true
+
+  function makeParams(params) {
+    return `{"is_local" : ${local}, "params" : ${params}}`;
+  }		
+
+  function onSandboxMessage(evt) {
+    console.log(evt)
+    let data = JSON.parse(evt.data);
+
+    if (data.method == "StartGame") {
+      console.log(`Seed: ${data.seed}`);
+      console.log(`Bot: ${data.runBot}`);
+      __StartGame(evt.data);
+    }
+
+    if (data.method == "StopGame") {
+      __StopGame();
+    }
+
+    if (data.method == "OnCmd") {
+      console.log(`OnApply: ${data.cmd}`);
+      __ApplyCmd(data.cmd);
+    }
+  }
+
+  function __StartGame(startCmd) {
+    let cmd = JSON.parse(startCmd);
+    GameController.startGame(cmd.type, cmd.seed, cmd.is_master, cmd.is_first_launch, cmd.bot_skill);
+  }
+
+  function __StopGame() {
+    GameController.gameStop();
+  }
+
+  function __ApplyCmd(cmd) {
+    let data = JSON.parse(cmd);
+    console.log(`OnApplymethod: ${data.method}`);
+    switch (data.method) {
+      case "launch_torus":
+        GameController.launchOpponentTorus(data.dir);
+        break;
+      default:
+        console.log(`Cmd not found`);
+    }
+  }
+
+  function blitzOnLaunchOpponentTorus(dir) {
+    let data = {
+      method : "launch_torus",
+      dir : dir
+    }
+
+    let message = {
+      method : 'OnCmd',
+      cmd : JSON.stringify(data)
+    }
+
+    let messageJson = JSON.stringify(message);
+    console.log(`MessageJson: ${messageJson}`);
+    //parent.postMessage(messageJson); //for test on stand
+
+    if (window._OnCommand !== undefined) {
+      window._OnCommand.postMessage(makeParams(`${messageJson}`));
+    }
+  }
+
+  function blitzOnSceneLoaded() {
+    console.log(`OnSceneLoaded`);
+    
+    if (window._OnSceneLoaded !== undefined) {
+      window._OnSceneLoaded.postMessage(makeParams('0'));
+    }
+  }
+
+  function blitzOnScore(score) {
+    console.log(`OnScore: ${score}`);
+
+    if (window._OnNewScore !== undefined) {
+        window._OnNewScore.postMessage(makeParams(`${score}`));
+    }
+  }
+
+  function blitzOnNewBotScoreOneWorld(score) {
+    console.log(`OnBotScore: ${score}`);
+
+    if (window._OnBotScoreOneWorld !== undefined) {
+      window._OnBotScoreOneWorld.postMessage(makeParams(`${score}`));
+    }
+  }
+  
+  function blitzOnChangeHealth(health) {
+    console.log(`blitzOnChangeHealth: ${health}`);
+    
+    if (window._OnChangeHealth !== undefined) {
+      window._OnChangeHealth.postMessage(makeParams(`${health}`));
+    }
+  }
+
+  function blitzOnUX(name) {
+    console.log(`OnUX: ${name}`);
+
+    if (window._OnUX !== undefined) {
+      window._OnUX.postMessage(makeParams(`${name}`));
+    }
+  }
+
+  function blitzOnGameOver() {
+    console.log(`OnGameOver`);
+
+    if (window._OnGameFinished !== undefined) {
+      window._OnGameFinished.postMessage(makeParams(''));
+    }
+  }
+
+  function blitzOnBotGameOverOneWorld() {
+    console.log(`OnBotGameOverOneWorld`);
+
+    if (window._OnBotGameFinishedOneWorld !== undefined) {
+      window._OnBotGameFinishedOneWorld.postMessage(makeParams(''));
+    }
+  }
+
+  window.addEventListener("message", onSandboxMessage, false);
+  </script>
 </body>
 </html>
