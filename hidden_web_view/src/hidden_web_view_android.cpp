@@ -96,17 +96,13 @@ namespace hiddenWebView {
 	}
 
 	int platform_AddJavascriptChannel(lua_State* luaState,  const char* channelName) {
-		dmLogInfo("MMMMMM BEFORE CALL");
-
 		int scriptId = ++webViewMain.requestId;
 		
 		JNIEnv* env = Attach();
 		jstring channel = env->NewStringUTF(channelName);
 		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.addJavascriptChannelMethod, channel, scriptId);
 		Detach();
-
-		dmLogInfo("MMMMMM AFTER CALL");
-
+		
 		return scriptId;
 	}
 
@@ -269,8 +265,6 @@ namespace hiddenWebView {
 		jclass webview_class = (jclass)env->CallObjectMethod(cls, find_class, str_class_name);
 		env->DeleteLocalRef(str_class_name);
 
-		dmLogInfo("MMMMMM BEFORE INIT 1");
-		
 		webViewMain.loadWebPageMethod = env->GetMethodID(webview_class, "loadWebPage", "(Ljava/lang/String;I)V");
 		webViewMain.loadGameMethod = env->GetMethodID(webview_class, "loadGame", "(Ljava/lang/String;I)V");
 		webViewMain.executeScriptMethod = env->GetMethodID(webview_class, "executeScript", "(Ljava/lang/String;I)V");
@@ -284,20 +278,10 @@ namespace hiddenWebView {
 		webViewMain.setTouchInterceptorAreaMethod = env->GetMethodID(webview_class, "setTouchInterceptor", "(DDDD)V");
 		webViewMain.setDebugEnabledMethod = env->GetMethodID(webview_class, "setDebugEnabled", "(I)V");
 
-		dmLogInfo("MMMMMM AFTER INIT");
-		
 		jmethodID jni_constructor = env->GetMethodID(webview_class, "<init>", "()V");
-
-		dmLogInfo("MMMMMM BEFORE CONSTRUCTOR");
-		
 		webViewMain.jniInterface = env->NewGlobalRef(env->NewObject(webview_class, jni_constructor, g_AndroidApp->activity->clazz, 1));
-
-		dmLogInfo("MMMMMM AFTER CONSTRUCTOR");
 		
 		Detach();
-
-		dmLogInfo("MMMMMM AFTER INIT 2");
-		
 		return dmExtension::RESULT_OK;
 	}
 
