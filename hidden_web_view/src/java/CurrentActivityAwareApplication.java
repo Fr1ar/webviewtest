@@ -8,42 +8,85 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.View;
-import android.view.ViewGroup;
 import android.util.Log;
 
 
 public class CurrentActivityAwareApplication extends Application {
-    // это активити живет все время сколько живет приложение
-    // поэтому утечки памяти от хранения в статичной переменной не будет
     @SuppressLint("StaticFieldLeak")
-    static Activity currentlyOpenedActivity;
+    public static CurrentActivityAwareApplication instance;
 
-    private static final String TAG = "HiddenWebViewLog";
+    protected WebViewActivity webViewActivity;
+    protected Activity defoldActivity;
+
+    private static final String TAG = WebViewController.TAG;
+
+    public static final String DEFOLD_ACTIVITY = "com.dynamo.android.DefoldActivity";
+    public static final String WEBVIEW_ACTIVITY = "com.blitz.hiddenwebview.WebViewActivity";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        
-        Log.d(TAG, "CurrentActivityAwareApplication.onCreated");
+
+        Log.d(TAG, "Application.onCreated");
+        instance = this;
         setupActivityListener();
     }
-    
+
+    public WebViewActivity getWebViewActivity() {
+        return webViewActivity;
+    }
+
+    public Activity getDefoldActivity() {
+        return defoldActivity;
+    }
+
     private void setupActivityListener() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityCreated: " + activityName);
+                Log.d(TAG, "Application.onActivityCreated: " + getActivityName(activity));
             }
-            
+
             @Override
             public void onActivityStarted(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityStarted: " + activityName);
-
-                currentlyOpenedActivity = activity;
+                Log.d(TAG, "Application.onActivityStarted: " + getActivityName(activity));
+                assignActivity(activity);
             }
-            
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                Log.d(TAG, "Application.onActivityResumed: " + getActivityName(activity));
+                assignActivity(activity);
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                Log.d(TAG, "Application.onActivityPaused: " + getActivityName(activity));
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                Log.d(TAG, "Application.onActivityStopped: " + getActivityName(activity));
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                Log.d(TAG, "Application.onActivitySaveInstanceState: " + getActivityName(activity));
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                Log.d(TAG, "Application.onActivityDestroyed: " + getActivityName(activity));
+            }
+
+            private void assignActivity(Activity activity) {
+                if (getActivityName(activity).equals(WEBVIEW_ACTIVITY)) {
+                    webViewActivity = (WebViewActivity) activity;
+                } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
+                    defoldActivity = activity;
+                }
+            }
+
             private String getActivityName(Activity activity) {
                 return activity.getClass().getName();
             }
@@ -51,7 +94,7 @@ public class CurrentActivityAwareApplication extends Application {
             private void makeTransparent(Activity activity) {
                 String activityName = getActivityName(activity);
                 Log.d(TAG, "CurrentActivityAwareApplication.makeTransparent: " + activityName);
-                
+
                 Window window = activity.getWindow();
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -60,42 +103,6 @@ public class CurrentActivityAwareApplication extends Application {
                 activity.findViewById(android.R.id.content).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 // window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-            }
-            
-            @Override
-            public void onActivityResumed(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityResumed: " + activityName);
-
-                currentlyOpenedActivity = activity;
-
-                if (activityName.contains("Defold")) {
-                    makeTransparent(activity);
-                }
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityPaused: " + activityName);
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityStopped: " + activityName);
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivitySaveInstanceState: " + activityName);
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.onActivityDestroyed: " + activityName);
             }
         });
     }

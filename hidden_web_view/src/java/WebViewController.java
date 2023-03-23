@@ -2,107 +2,118 @@ package com.blitz.hiddenwebview;
 
 import android.util.Log;
 
-public class DefoldWebViewInterface {
-    public native void onScriptFinished(String result, int id);
-    public native void onScriptCallback(String type, String payload);
+public class WebViewController {
+    public static final String TAG = "HiddenWebView";
 
-    private static final String TAG = "HiddenWebViewLog";
-
-    public void executeScript(String js, int id) {
-        Log.d(TAG, "DefoldWebViewInterface.executeScript: " + js);
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.executeScript: runOnUiThread()");
-            FakeWebViewActivity.executeScript(js, id);
-        });
+    private interface Runnable {
+        public void runOnUiThread(WebViewActivity activity);
     }
 
-    public void addJavascriptChannel(String channel, int id) {
-        Log.d(TAG, "MMMMMM DefoldWebViewInterface.addJavascriptChannel, channel = " + channel);
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.addJavascriptChannel: runOnUiThread()");
-            FakeWebViewActivity.addJavascriptChannel(channel);
-        });
+    protected WebViewActivity getActivity() {
+        return CurrentActivityAwareApplication.instance.getWebViewActivity();
     }
 
-    public void loadGame(String gamePath, int id) {
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.loadGame: runOnUiThread()");
-            FakeWebViewActivity.loadGame(gamePath, id);
-        });
-    }
-
-    public void loadWebPage(String gamePath, int id) {
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.loadWebPage: runOnUiThread()");
-            FakeWebViewActivity.loadWebPage(gamePath, id);
-        });
-    }
-
-    public void changeVisibility(int visible) {
-        Log.d(TAG, "DefoldWebViewInterface.changeVisibility visible = " + visible);
-
-        FakeWebViewActivity.defoldWebViewInterface = this;
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.changeVisibility: runOnUiThread()");
-            FakeWebViewActivity.changeVisibility(visible);
-        });
-    }
-
-    public void setDebugEnabled(int flag) {
-        Log.d(TAG, "DefoldWebViewInterface.setDebugEnabled flag = " + flag);
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.setDebugEnabled: runOnUiThread()");
-            FakeWebViewActivity.setDebugEnabled(flag);
-        });
-    }
-
-    public void setTouchInterceptor(double x, double y, double width, double height) {
-        Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor");
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.setTouchInterceptor: runOnUiThread()");
-            FakeWebViewActivity.setTouchInterceptor(x, y, width, height);
-        });
-    }
-
-    public void setPositionAndSize(double x, double y, double width, double height) {
-        Log.d(TAG, "DefoldWebViewInterface.setPositionAndSize width = " + width + 
-            ", height = " + height + ", x = " + x + ", y = " + y);
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.setPositionAndSize: runOnUiThread()");
-            FakeWebViewActivity.setPositionAndSize(x, y, width, height);
-        });
-    }
-
-    public void acceptTouchEvents(int accept) {
-        Log.d(TAG, "DefoldWebViewInterface.acceptTouchEvents");
-
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(() -> {
-            Log.d(TAG, "DefoldWebViewInterface.acceptTouchEvents: runOnUiThread()");
-            FakeWebViewActivity.acceptTouchEvents(accept);
+    protected void runOnUiThread(Runnable runnable) {
+        WebViewActivity activity = getActivity();
+        activity.runOnUiThread(() -> {
+            runnable.runOnUiThread(activity);
         });
     }
 
     public int isInUse() {
-        Log.d(TAG, "DefoldWebViewInterface.isInUse");
+        Log.d(TAG, "WebViewController.isInUse");
 
-        return FakeWebViewActivity.webViewActive ? 1 : 0;
+        WebViewActivity activity = getActivity();
+        return activity.isWebViewVisible() ? 1 : 0;
+    }
+
+    public void executeScript(String js, int id) {
+        Log.d(TAG, "WebViewController.executeScript: " + js);
+
+        runOnUiThread((activity) -> {
+            activity.executeScript(js, id);
+        });
+    }
+
+    public void addJavascriptChannel(String channel, int id) {
+        Log.d(TAG, "WebViewController.addJavascriptChannel, channel = " + channel);
+
+        runOnUiThread((activity) -> {
+            activity.addJavascriptChannel(channel);
+        });
+    }
+
+    public void loadGame(String gamePath, int id) {
+        Log.d(TAG, "WebViewController.loadGame, gamePath = " + gamePath);
+
+        runOnUiThread((activity) -> {
+            activity.loadGame(gamePath, id);
+        });
+    }
+
+    public void loadWebPage(String gamePath, int id) {
+        Log.d(TAG, "WebViewController.loadWebPage, gamePath = " + gamePath);
+
+        runOnUiThread((activity) -> {
+            activity.loadWebPage(gamePath, id);
+        });
+    }
+
+    public void changeVisibility(int visible) {
+        Log.d(TAG, "WebViewController.changeVisibility visible = " + visible);
+
+        runOnUiThread((activity) -> {
+            activity.changeVisibility(visible);
+        });
+    }
+
+    public void setDebugEnabled(int flag) {
+        Log.d(TAG, "WebViewController.setDebugEnabled flag = " + flag);
+
+        runOnUiThread((activity) -> {
+            activity.setDebugEnabled(flag);
+        });
+    }
+
+    public void setTouchInterceptor(double x, double y, double width, double height) {
+        Log.d(TAG, "WebViewController.setTouchInterceptor x = " + x + ", y = " + y +
+                ", width = " + width + ", height = " + height);
+
+        runOnUiThread((activity) -> {
+            activity.setTouchInterceptor(x, y, width, height);
+        });
+    }
+
+    public void setPositionAndSize(double x, double y, double width, double height) {
+        Log.d(TAG, "WebViewController.setPositionAndSize width = " + width +
+                ", height = " + height + ", x = " + x + ", y = " + y);
+
+        runOnUiThread((activity) -> {
+            activity.setPositionAndSize(x, y, width, height);
+        });
+    }
+
+    public void acceptTouchEvents(int accept) {
+        Log.d(TAG, "WebViewController.acceptTouchEvents accept = " + accept);
+
+        runOnUiThread((activity) -> {
+            activity.acceptTouchEvents(accept);
+        });
     }
 
     public void centerWebView() {
-        Log.d(TAG, "DefoldWebViewInterface.centerWebView");
+        Log.d(TAG, "WebViewController.centerWebView");
 
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(FakeWebViewActivity::centerWebView);
+        runOnUiThread((activity) -> {
+            activity.centerWebView();
+        });
     }
 
     public void matchScreenSize() {
-        Log.d(TAG, "DefoldWebViewInterface.matchScreenSize");
+        Log.d(TAG, "WebViewController.matchScreenSize");
 
-        CurrentActivityAwareApplication.currentlyOpenedActivity.runOnUiThread(FakeWebViewActivity::matchScreenSize);
+        runOnUiThread((activity) -> {
+            activity.matchScreenSize();
+        });
     }
 }

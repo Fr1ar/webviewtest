@@ -198,7 +198,7 @@ namespace hiddenWebView {
 	#ifdef __cplusplus
 	extern "C" {
 	#endif
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_FakeWebViewActivity_onPageFinished(JNIEnv* env, jobject, jstring url, jint id) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onPageFinished(JNIEnv* env, jobject, jstring url, jint id) {
 			WebViewCommand cmd;
 			cmd.type = CMD_LOAD_OK;
 			cmd.requestId = id;
@@ -206,7 +206,7 @@ namespace hiddenWebView {
 			QueueCommand(&cmd);
 		}
 
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_FakeWebViewActivity_onReceivedError(JNIEnv* env, jobject, jstring url, jstring errorMessage, jint id) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onReceivedError(JNIEnv* env, jobject, jstring url, jstring errorMessage, jint id) {
 			WebViewCommand cmd;
 			cmd.type = CMD_LOAD_ERROR;
 			cmd.requestId = id;
@@ -214,7 +214,7 @@ namespace hiddenWebView {
 			QueueCommand(&cmd);
 		}
 
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_DefoldWebViewInterface_onScriptFinished(JNIEnv* env, jobject, jstring result, jint id) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onScriptFinished(JNIEnv* env, jobject, jstring result, jint id) {
 			WebViewCommand cmd;
 			cmd.type = CMD_SCRIPT_OK;
 			cmd.requestId = id;
@@ -223,7 +223,7 @@ namespace hiddenWebView {
 			QueueCommand(&cmd);
 		}
 
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_DefoldWebViewInterface_onScriptCallback(JNIEnv* env, jobject, jstring type, jstring data) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onScriptCallback(JNIEnv* env, jobject, jstring type, jstring data) {
 			WebViewCommand cmd;
 			cmd.type = CMD_SCRIPT_CALLBACK;
 			cmd.requestId = 0;
@@ -232,7 +232,7 @@ namespace hiddenWebView {
 			QueueCommand(&cmd);
 		}
 
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_FakeWebViewActivity_onScriptFailed(JNIEnv* env, jobject, jstring error, jint id) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onScriptFailed(JNIEnv* env, jobject, jstring error, jint id) {
 			WebViewCommand cmd;
 			cmd.type = CMD_SCRIPT_ERROR;
 			cmd.requestId = id;
@@ -241,7 +241,7 @@ namespace hiddenWebView {
 			QueueCommand(&cmd);
 		}
 
-		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_FakeWebViewActivity_onPageLoading(JNIEnv* env, jobject, jstring url, jint id) {
+		JNIEXPORT void JNICALL Java_com_blitz_hiddenwebview_WebViewActivity_onPageLoading(JNIEnv* env, jobject, jstring url, jint id) {
 			WebViewCommand cmd;
 			cmd.type = CMD_LOADING;
 			cmd.requestId = id;
@@ -264,7 +264,7 @@ namespace hiddenWebView {
 		jclass class_loader = env->FindClass("java/lang/ClassLoader");
 		jmethodID find_class = env->GetMethodID(class_loader, "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;");
 		
-		jstring str_class_name = env->NewStringUTF("com.blitz.hiddenwebview.DefoldWebViewInterface");
+		jstring str_class_name = env->NewStringUTF("com.blitz.hiddenwebview.WebViewController");
 		
 		jclass webview_class = (jclass)env->CallObjectMethod(cls, find_class, str_class_name);
 		env->DeleteLocalRef(str_class_name);

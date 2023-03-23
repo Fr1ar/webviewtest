@@ -78,7 +78,7 @@
         <activity
             android:label="{{project.title}}"
             android:screenOrientation="{{orientation-support}}"
-            android:name="com.blitz.hiddenwebview.FakeWebViewActivity"
+            android:name="com.blitz.hiddenwebview.WebViewActivity"
             android:exported="true"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
