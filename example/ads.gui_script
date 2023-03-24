@@ -1,6 +1,6 @@
 local dirtylarry = require "dirtylarry/dirtylarry"
 
-local MAX_LOG_LINES = 35
+local MAX_LOG_LINES = 20
 
 --log logic
 local gprint = print
@@ -59,7 +59,7 @@ function on_html_loaded()
     local param_string = json.encode(params)
     local touch_area_height = 0.6
     
-    hidden_web_view.set_touch_interceptor_area(0, 0, 1, touch_area_height)
+    hidden_web_view.set_touch_interceptor_area(0, 0.3, 1, touch_area_height)
 
     --[[
     local js = "document.write('<h2>Hello World!</h2><p>Have a nice day!</p>');"
@@ -73,28 +73,20 @@ function on_html_loaded()
     
 end
 
-
-function on_js_callback(data)
-    pprint("HiddenWebView: on_js_callback", data)
-end
-
 function on_webview_callback(id, type, data)
-    print("HiddenWebView: on_webview_callback", type)
-
     if type == hidden_web_view.CALLBACK_RESULT_GAME_LOADED then
         on_html_loaded()
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_LOADING then
-        print("HiddenWebView: CALLBACK_RESULT_GAME_LOADING")
+        print("HiddenWebView: GAME_LOADING")
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_ERROR then
-        print("HiddenWebView: CALLBACK_RESULT_GAME_ERROR")
+        print("HiddenWebView: GAME_ERROR")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_OK then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_OK")
+        print("HiddenWebView: JAVASCRIPT_OK")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_ERROR then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_ERROR")
-        pprint(data)
+        print("HiddenWebView: JAVASCRIPT_ERROR")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_CHANNEL_CALLBACK then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_CHANNEL_CALLBACK:")
-        on_js_callback(data)
+        print("HiddenWebView: JAVASCRIPT_CHANNEL: "..data.url)
+        pprint(data)
     else
         print("HiddenWebView: Unknown callback type")
     end
@@ -105,7 +97,6 @@ function create_webview()
     print("HiddenWebView: STEP 1")
     
     local instance = hidden_web_view.create(function(self_, id, type, data)
-        print("HiddenWebView: STEP 1: on_created callback")
         on_webview_callback(id, type, data)
     end)
 

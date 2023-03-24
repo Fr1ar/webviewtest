@@ -30,19 +30,9 @@
       </intent>
     </queries>
 
-<!--    <application-->
-<!--    {{#has-icons?}}-->
-<!--    android:icon="@drawable/icon"-->
-<!--    {{/has-icons?}}-->
-<!--    android:label="{{project.title}}"-->
-<!--    android:debuggable="{{android.debuggable}}"-->
-<!--    android:name="com.blitz.hiddenwebview.CurrentActivityAwareApplication"-->
-<!--    android:hasCode="true"-->
-<!--    android:usesCleartextTraffic="true">-->
-
     <application
         android:label="WebViewTest"
-        android:name="com.blitz.hiddenwebview.CurrentActivityAwareApplication"
+        android:name="com.blitz.hiddenwebview.ApplicationController"
         android:hasCode="true"
         android:usesCleartextTraffic="true">
 

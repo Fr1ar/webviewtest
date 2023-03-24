@@ -8,7 +8,7 @@
 ```xml
     <application
         ...
-        android:name="com.blitz.hiddenwebview.CurrentActivityAwareApplication"
+        android:name="com.blitz.hiddenwebview.ApplicationController"
         android:hasCode="true"
         ...>
 ```

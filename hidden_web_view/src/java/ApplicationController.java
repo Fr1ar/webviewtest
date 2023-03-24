@@ -3,23 +3,22 @@ package com.blitz.hiddenwebview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.View;
 import android.util.Log;
 
 
-public class CurrentActivityAwareApplication extends Application {
+public class ApplicationController extends Application {
+    private static final String TAG = WebViewController.TAG;
+
     @SuppressLint("StaticFieldLeak")
-    public static CurrentActivityAwareApplication instance;
+    public static ApplicationController instance;
 
     protected WebViewActivity webViewActivity;
     protected Activity defoldActivity;
 
-    private static final String TAG = WebViewController.TAG;
-
+    /**
+     * Названия классов Activity
+     */
     public static final String DEFOLD_ACTIVITY = "com.dynamo.android.DefoldActivity";
     public static final String WEBVIEW_ACTIVITY = "com.blitz.hiddenwebview.WebViewActivity";
 
@@ -29,7 +28,7 @@ public class CurrentActivityAwareApplication extends Application {
 
         Log.d(TAG, "Application.onCreated");
         instance = this;
-        setupActivityListener();
+        initActivityListener();
     }
 
     public WebViewActivity getWebViewActivity() {
@@ -40,7 +39,7 @@ public class CurrentActivityAwareApplication extends Application {
         return defoldActivity;
     }
 
-    private void setupActivityListener() {
+    private void initActivityListener() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -89,20 +88,6 @@ public class CurrentActivityAwareApplication extends Application {
 
             private String getActivityName(Activity activity) {
                 return activity.getClass().getName();
-            }
-
-            private void makeTransparent(Activity activity) {
-                String activityName = getActivityName(activity);
-                Log.d(TAG, "CurrentActivityAwareApplication.makeTransparent: " + activityName);
-
-                Window window = activity.getWindow();
-                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                View view = window.getDecorView();
-                view.setBackgroundColor(Color.TRANSPARENT);
-                activity.findViewById(android.R.id.content).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                // window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             }
         });
     }

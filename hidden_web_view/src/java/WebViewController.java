@@ -6,11 +6,11 @@ public class WebViewController {
     public static final String TAG = "HiddenWebView";
 
     private interface Runnable {
-        public void runOnUiThread(WebViewActivity activity);
+        void runOnUiThread(WebViewActivity activity);
     }
 
     protected WebViewActivity getActivity() {
-        return CurrentActivityAwareApplication.instance.getWebViewActivity();
+        return ApplicationController.instance.getWebViewActivity();
     }
 
     protected void runOnUiThread(Runnable runnable) {
@@ -21,8 +21,6 @@ public class WebViewController {
     }
 
     public int isInUse() {
-        Log.d(TAG, "WebViewController.isInUse");
-
         WebViewActivity activity = getActivity();
         return activity.isWebViewVisible() ? 1 : 0;
     }
