@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Size;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,11 +19,7 @@ import android.widget.FrameLayout;
 import android.graphics.Point;
 import android.view.Display;
 import android.util.Log;
-import android.os.Build;
 import android.content.res.Configuration;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
 /**
@@ -48,7 +46,13 @@ public class WebViewActivity extends Activity {
     /**
      * Параметры расположения View-перехватчика в DefoldActivity
      */
-    private WindowManager.LayoutParams touchInterceptorViewParams;
+    private static class Bounds {
+        public double x = 0.0;
+        public double y = 0.0;
+        public double width = 1.0;
+        public double height = 1.0;
+    }
+    private final Bounds bounds = new Bounds();
 
     /**
      * Этот класс обрабатывает Javascript ошибки в htmlGameView и передает их через JNI в lua код
@@ -111,18 +115,43 @@ public class WebViewActivity extends Activity {
 
         Log.d(TAG, "WebViewActivity.onCreate");
 
-        initWebViewFullscreenMode();
-        initWebViewContainer();
-        initWebView();
+        initSystemUIVisibilityListener();
+        updateFullscreenMode();
+
+        createWebViewContainer();
+        createWebView();
 
         openDefoldActivity();
     }
 
-    protected void initWebViewFullscreenMode() {
-        Log.d(TAG, "WebViewActivity.initWebViewFullscreenMode");
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d(TAG, "WebViewActivity.onResume");
+
+        updateFullscreenMode();
+    }
+
+    protected void initSystemUIVisibilityListener() {
+        // Это нужно, чтобы не показывалась белая/черная полоса под стандартным
+        // всплывающим меню "Navigation Bar" (там где кнопки "Back", "Home" и "Overview")
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener
+                (visibility -> {
+                    if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
+                        updateFullscreenMode();
+                    }
+                });
+    }
+
+    public void updateFullscreenMode() {
+        Log.d(TAG, "WebViewActivity.updateFullscreenMode");
+
+        Window window = getWindow();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().getDecorView().setSystemUiVisibility(
+            window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -130,10 +159,11 @@ public class WebViewActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
             layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            getWindow().setAttributes(layoutParams);
+            window.setAttributes(layoutParams);
         }
     }
 
@@ -144,7 +174,7 @@ public class WebViewActivity extends Activity {
         Log.d(TAG, "WebViewActivity.onWindowFocusChanged");
 
         if (hasFocus) {
-            initWebViewFullscreenMode();
+            updateFullscreenMode();
         }
     }
 
@@ -155,16 +185,20 @@ public class WebViewActivity extends Activity {
         Log.d(TAG, "WebViewActivity.onConfigurationChanged");
 
         if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
-            initWebViewFullscreenMode();
+            updateFullscreenMode();
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void initWebView() {
-        Log.d(TAG, "WebViewActivity.initWebView");
+    public void createWebView() {
+        Log.d(TAG, "WebViewActivity.createWebView");
+
+        if (htmlGameView != null) {
+            destroyWebView();
+        }
 
         htmlGameView = new WebView(this);
-        htmlGameView.setBackgroundColor(getBlackColor());
+        htmlGameView.setBackgroundColor(getBackgroundColor());
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -196,6 +230,26 @@ public class WebViewActivity extends Activity {
         mainContainer.addView(htmlGameView, params);
     }
 
+    public void destroyWebView() {
+        Log.d(TAG, "WebViewActivity.destroyWebView");
+
+        removeTouchInterceptorView();
+
+        if (isWebViewActive()) {
+            mainContainer.removeView(htmlGameView);
+        }
+
+        htmlGameView = null;
+    }
+
+    public boolean isWebViewActive() {
+        return htmlGameView != null && htmlGameView.getWindowToken() != null;
+    }
+
+    public WebView getHtmlGameView() {
+        return htmlGameView;
+    }
+
     public void setPositionAndSize(double x, double y, double width, double height) {
         Log.d(TAG, "WebViewActivity.setPositionAndSize x = " + x + ", y = " + y +
                 ", width = " + width + ", height = " + height);
@@ -209,10 +263,6 @@ public class WebViewActivity extends Activity {
 
         htmlGameView.setLayoutParams(params);
         htmlGameView.requestLayout();
-    }
-
-    public WebView getHtmlGameView() {
-        return htmlGameView;
     }
 
     public void executeScript(String js, int id) {
@@ -261,16 +311,16 @@ public class WebViewActivity extends Activity {
         WebView.setWebContentsDebuggingEnabled(isDebugEnabled);
     }
 
-    protected WindowManager.LayoutParams getTouchInterceptorViewParams(double x, double y, double width, double height) {
+    protected WindowManager.LayoutParams getTouchInterceptorViewParams() {
         Size screenSize = getScreenSize();
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.gravity = Gravity.TOP | Gravity.CENTER;
-        params.x = dpToPx(screenSize.getWidth() * x);
-        params.y = dpToPx(screenSize.getHeight() * y);
-        params.width = dpToPx(screenSize.getWidth() * width);
-        params.height = dpToPx(screenSize.getHeight() * height);
+        params.x = dpToPx(screenSize.getWidth() * bounds.x);
+        params.y = dpToPx(screenSize.getHeight() * bounds.y);
+        params.width = dpToPx(screenSize.getWidth() * bounds.width);
+        params.height = dpToPx(screenSize.getHeight() * bounds.height);
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        params.alpha = 0.3f;
+        params.alpha = 0.4f;
         params.format = PixelFormat.TRANSLUCENT;
         return params;
     }
@@ -282,8 +332,10 @@ public class WebViewActivity extends Activity {
     protected void addTouchInterceptorView() {
         WindowManager wm = getDefoldActivity().getWindowManager();
         touchInterceptorView = new TouchInterceptorView(getDefoldActivity(), getWebViewActivity());
-        touchInterceptorView.setBackground(new ColorDrawable(isDebugEnabled ? Color.GREEN : Color.TRANSPARENT));
-        wm.addView(touchInterceptorView, touchInterceptorViewParams);
+        touchInterceptorView.setBackground(new ColorDrawable(isDebugEnabled ? Color.LTGRAY : Color.TRANSPARENT));
+        touchInterceptorView.setDebugEnabled(isDebugEnabled);
+        WindowManager.LayoutParams params = getTouchInterceptorViewParams();
+        wm.addView(touchInterceptorView, params);
     }
 
     protected void removeTouchInterceptorView() {
@@ -298,17 +350,23 @@ public class WebViewActivity extends Activity {
         Log.d(TAG, "WebViewActivity.setTouchInterceptor x = " + x + ", y = " + y +
                 ", width = " + width + ", height = " + height);
 
-        touchInterceptorViewParams = getTouchInterceptorViewParams(x, y, width, height);
+        bounds.x = x;
+        bounds.y = y;
+        bounds.width = width;
+        bounds.height = height;
 
-        removeTouchInterceptorView();
-        addTouchInterceptorView();
+        if (isTouchInterceptorViewActive()) {
+            removeTouchInterceptorView();
+            addTouchInterceptorView();
+        }
     }
 
     public void acceptTouchEvents(int accept) {
         Log.d(TAG, "WebViewActivity.acceptTouchEvents accept = " + accept);
 
-        if (isTouchInterceptorViewActive()) {
-            touchInterceptorView.setAcceptingTouchEvents(accept != 0);
+        removeTouchInterceptorView();
+        if (accept != 0) {
+            addTouchInterceptorView();
         }
     }
 
@@ -353,15 +411,15 @@ public class WebViewActivity extends Activity {
         htmlGameView.requestLayout();
     }
 
-    private void initWebViewContainer() {
-        Log.d(TAG, "WebViewActivity.setDefaultContainer");
+    private void createWebViewContainer() {
+        Log.d(TAG, "WebViewActivity.createWebViewContainer");
 
         mainContainer = new FrameLayout(this);
-        mainContainer.setBackgroundColor(getBlackColor());
+        mainContainer.setBackgroundColor(getBackgroundColor());
         setContentView(mainContainer);
     }
 
-    protected int getBlackColor() {
+    protected int getBackgroundColor() {
         return getResources().getColor(android.R.color.black, getResources().newTheme());
     }
 

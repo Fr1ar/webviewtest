@@ -22,6 +22,10 @@ public class ApplicationController extends Application {
     public static final String DEFOLD_ACTIVITY = "com.dynamo.android.DefoldActivity";
     public static final String WEBVIEW_ACTIVITY = "com.blitz.hiddenwebview.WebViewActivity";
 
+    public static String getActivityName(Activity activity) {
+        return activity.getClass().getName();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +48,7 @@ public class ApplicationController extends Application {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 Log.d(TAG, "Application.onActivityCreated: " + getActivityName(activity));
+                assignActivity(activity);
             }
 
             @Override
@@ -84,10 +89,6 @@ public class ApplicationController extends Application {
                 } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
                     defoldActivity = activity;
                 }
-            }
-
-            private String getActivityName(Activity activity) {
-                return activity.getClass().getName();
             }
         });
     }

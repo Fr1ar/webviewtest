@@ -1,19 +1,22 @@
 package com.blitz.hiddenwebview;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebView;
+import androidx.appcompat.widget.AppCompatTextView;
 
-class TouchInterceptorView extends View {
+class TouchInterceptorView extends AppCompatTextView {
     private static final String TAG = WebViewController.TAG;
+    private static final String NotificationText =
+            "Touch interceptor is visible in debug mode";
 
     protected WebViewActivity webViewActivity;
-    protected boolean isAcceptingTouchEvents = true;
 
     /**
      * Конструкторы по умолчанию
@@ -32,20 +35,32 @@ class TouchInterceptorView extends View {
         super(defoldActivity);
 
         this.webViewActivity = webViewActivity;
+
+        setTextSize(10);
+        setTextColor(Color.BLACK);
+        setIncludeFontPadding(true);
+        setPadding(20, 20, 20, 20);
     }
 
-    public void setAcceptingTouchEvents(boolean isAcceptingTouchEvents) {
-        this.isAcceptingTouchEvents = isAcceptingTouchEvents;
+    @SuppressLint("SetTextI18n")
+    public void setDebugEnabled(boolean isDebugEnabled) {
+        setText(isDebugEnabled ? NotificationText : "");
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         Log.d(TAG, "dispatchTouchEvent: x = " + event.getX() + ", y = " + event.getY());
 
-        if (isAcceptingTouchEvents && this.webViewActivity != null) {
+        if (this.webViewActivity != null) {
             return dispatchModifiedMotionEvent(event);
         }
         return false;
+    }
+
+    protected Point getScreenOffset() {
+        int[] location = new int[2];
+        getLocationOnScreen(location);
+        return new Point(location[0], location[1]);
     }
 
     protected boolean dispatchModifiedMotionEvent(MotionEvent event) {
@@ -57,22 +72,21 @@ class TouchInterceptorView extends View {
             return false;
         }
 
+        // Этот код должен пересчитывать координаты нажатия с учетом того,
+        // что webview находится на экране не в координатах (0, 0)
+        // Но почему то это код крашится если приходит несколько нажатий одновременно
+        // Чем чинить это, проще будет вычитать смещение уже в самом webview
+
+        /*
         Point offset = getScreenOffset();
-        MotionEvent modifiedEvent = MotionEvent.obtain(event.getDownTime(),
-                event.getEventTime(), event.getAction(), event.getX() + offset.x,
+        MotionEvent newEvent = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
+                event.getAction(), event.getX() + offset.x,
                 event.getY() + offset.y, event.getMetaState());
-
-        Log.d(TAG, "TouchInterceptorView.modifiedEvent: x = " +
-                modifiedEvent.getX() + ", y = " + modifiedEvent.getY());
-
-        boolean result = htmlGameView.dispatchTouchEvent(modifiedEvent);
-        modifiedEvent.recycle();
+        boolean result = htmlGameView.dispatchTouchEvent(newEvent);
+        newEvent.recycle();
         return result;
-    }
+        */
 
-    protected Point getScreenOffset() {
-        int[] location = new int[2];
-        getLocationOnScreen(location);
-        return new Point(location[0], location[1]);
+        return htmlGameView.dispatchTouchEvent(event);
     }
 }

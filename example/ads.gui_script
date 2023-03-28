@@ -55,22 +55,30 @@ function on_html_loaded()
             }
         }
     }
-
-    local param_string = json.encode(params)
-    local touch_area_height = 0.6
     
-    hidden_web_view.set_touch_interceptor_area(0, 0.3, 1, touch_area_height)
-
     --[[
     local js = "document.write('<h2>Hello World!</h2><p>Have a nice day!</p>');"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
     ]]--
 
+    local param_string = json.encode(params)
     local js = "__Start(" .. param_string .. ")"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
+    hidden_web_view.set_accept_touch_events(1)
+
     
+    -- Спрячем и покажем view-перехватчик ввода
+    timer.delay(5, false, function()
+        print("HiddenWebView: Touch events disabled")
+        hidden_web_view.set_accept_touch_events(0)
+    end)
+
+    timer.delay(8, false, function()
+        print("HiddenWebView: Touch events enabled")
+        hidden_web_view.set_accept_touch_events(1)
+    end)
 end
 
 function on_webview_callback(id, type, data)
@@ -93,7 +101,6 @@ function on_webview_callback(id, type, data)
 end
 
 function create_webview()
-
     print("HiddenWebView: STEP 1")
     
     local instance = hidden_web_view.create(function(self_, id, type, data)
@@ -132,11 +139,15 @@ function create_webview()
     
     print("HiddenWebView: STEP 6")
     
-    hidden_web_view.open_game("main.html")
-    hidden_web_view.set_accept_touch_events(1)
+    local param_string = json.encode(params)
+    local touch_area_height = 0.6
+    hidden_web_view.set_touch_interceptor_area(0, 0.3, 1, touch_area_height)
 
     print("HiddenWebView: STEP 7")
-    
+
+    hidden_web_view.open_game("main.html")
+
+    print("HiddenWebView: STEP 8")
 end
 
 function on_input(self, action_id, action)
@@ -145,6 +156,10 @@ function on_input(self, action_id, action)
         print("HiddenWebView: Creating webview")
         create_webview()
         print("HiddenWebView: Webview created")
+    end)
+
+    dirtylarry:button("test", action_id, action, function ()
+        print("TEST BUTTON")
     end)
     
 end
