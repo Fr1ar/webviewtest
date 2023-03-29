@@ -72,21 +72,10 @@ class TouchInterceptorView extends AppCompatTextView {
             return false;
         }
 
-        // Этот код должен пересчитывать координаты нажатия с учетом того,
-        // что webview находится на экране не в координатах (0, 0)
-        // Но почему то это код крашится если приходит несколько нажатий одновременно
-        // Чем чинить это, проще будет вычитать смещение уже в самом webview
-
-        /*
         Point offset = getScreenOffset();
-        MotionEvent newEvent = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
-                event.getAction(), event.getX() + offset.x,
-                event.getY() + offset.y, event.getMetaState());
-        boolean result = htmlGameView.dispatchTouchEvent(newEvent);
-        newEvent.recycle();
-        return result;
-        */
+        event.offsetLocation(offset.x, offset.y);
+        htmlGameView.dispatchTouchEvent(event);
 
-        return htmlGameView.dispatchTouchEvent(event);
+        return false;
     }
 }
