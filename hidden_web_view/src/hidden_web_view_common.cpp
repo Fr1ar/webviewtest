@@ -7,6 +7,10 @@
 #include "local_asset_server.h"
 
 namespace hiddenWebView {
+
+	HiddenWebViewInfo* pWebViewInfo = nullptr;
+	localServer::LocalAssetServer* pServer = nullptr;
+
 	void executeLuaCallback(CallbackInfo* callback) {
 		if (callback->info->callbackReference == LUA_NOREF) {
 			dmLogError("No callback set");
@@ -76,13 +80,11 @@ namespace hiddenWebView {
 		if (info->selfReference != LUA_NOREF) {
 			dmScript::Unref(info->luaState, LUA_REGISTRYINDEX, info->selfReference);
 		}
-		
+
 		info->luaState = 0;
 		info->callbackReference = LUA_NOREF;
 		info->selfReference = LUA_NOREF;
 	}
-
-	localServer::LocalAssetServer* server;
 
 	static int createWebView(lua_State* luaState) {
 		int top = lua_gettop(luaState);
@@ -90,16 +92,15 @@ namespace hiddenWebView {
 		luaL_checktype(luaState, 1, LUA_TFUNCTION);
 		lua_pushvalue(luaState, 1);
 
-		HiddenWebViewInfo info;
-		
-		info.callbackReference = dmScript::Ref(luaState, LUA_REGISTRYINDEX);
+		pWebViewInfo = new HiddenWebViewInfo();
+		pWebViewInfo->callbackReference = dmScript::Ref(luaState, LUA_REGISTRYINDEX);
 		
 		dmScript::GetInstance(luaState);
 		
-		info.selfReference = dmScript::Ref(luaState, LUA_REGISTRYINDEX);
-		info.luaState = dmScript::GetMainThread(luaState);
+		pWebViewInfo->selfReference = dmScript::Ref(luaState, LUA_REGISTRYINDEX);
+		pWebViewInfo->luaState = dmScript::GetMainThread(luaState);
 
-		int webview_id = platform_Create(luaState, &info); 
+		int webview_id = platform_Create(luaState, pWebViewInfo); 
 		lua_pushnumber(luaState, webview_id);
 
 		assert(top + 1 == lua_gettop(luaState));
@@ -115,7 +116,11 @@ namespace hiddenWebView {
 
 		assert(top + 1 == lua_gettop(luaState));
 
-		delete server;
+		delete pWebViewInfo;
+		pWebViewInfo = nullptr;
+		
+		delete pServer;
+		pServer = nullptr;
 		
 		return 1;
 	}
@@ -174,8 +179,8 @@ namespace hiddenWebView {
 
 		lua_pushnumber(luaState, 0);
 
-		server = new localServer::LocalAssetServer();
-		server->startServer(baseUrl);
+		pServer = new localServer::LocalAssetServer();
+		pServer->startServer(baseUrl);
 
 		assert(top + 1 == lua_gettop(luaState));
 

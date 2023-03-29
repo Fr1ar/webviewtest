@@ -25,6 +25,22 @@ public class WebViewController {
         return activity.isWebViewVisible() ? 1 : 0;
     }
 
+    public void createWebView() {
+        Log.d(TAG, "WebViewController.createWebView");
+
+        runOnUiThread((activity) -> {
+            activity.createWebView();
+        });
+    }
+
+    public void destroyWebView() {
+        Log.d(TAG, "WebViewController.destroyWebView");
+
+        runOnUiThread((activity) -> {
+            activity.destroyWebView();
+        });
+    }
+
     public void executeScript(String js, int id) {
         Log.d(TAG, "WebViewController.executeScript: " + js);
 

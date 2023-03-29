@@ -119,7 +119,6 @@ public class WebViewActivity extends Activity {
         updateFullscreenMode();
 
         createWebViewContainer();
-        createWebView();
 
         openDefoldActivity();
     }
@@ -225,13 +224,15 @@ public class WebViewActivity extends Activity {
         htmlGameView.setWebChromeClient(webViewChromeClient);
         htmlGameView.setWebViewClient(webViewEventListener);
 
-        htmlGameView.setVisibility(View.GONE);
-
         mainContainer.addView(htmlGameView, params);
     }
 
     public void destroyWebView() {
         Log.d(TAG, "WebViewActivity.destroyWebView");
+
+        if (htmlGameView == null) {
+            return;
+        }
 
         removeTouchInterceptorView();
 
@@ -254,6 +255,10 @@ public class WebViewActivity extends Activity {
         Log.d(TAG, "WebViewActivity.setPositionAndSize x = " + x + ", y = " + y +
                 ", width = " + width + ", height = " + height);
 
+        if (htmlGameView == null) {
+            return;
+        }
+
         Size screenSize = getScreenSize();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) htmlGameView.getLayoutParams();
         params.width = dpToPx(screenSize.getWidth() * width);
@@ -268,11 +273,19 @@ public class WebViewActivity extends Activity {
     public void executeScript(String js, int id) {
         Log.d(TAG, "WebViewActivity.executeScript: " + js);
 
+        if (htmlGameView == null) {
+            return;
+        }
+
         htmlGameView.evaluateJavascript(js, value -> onScriptFinished(value, id));
     }
 
     public void addJavascriptChannel(String channel) {
         Log.d(TAG, "WebViewActivity.addJavascriptChannel: " + channel);
+
+        if (htmlGameView == null) {
+            return;
+        }
 
         JavaScriptInterface js = new JavaScriptInterface(
                 getWebViewActivity(),
@@ -288,6 +301,10 @@ public class WebViewActivity extends Activity {
     public void loadGame(String gamePath, int id) {
         Log.d(TAG, "WebViewActivity.loadGame");
 
+        if (htmlGameView == null) {
+            return;
+        }
+
         webViewEventListener.reset(id);
         webViewChromeClient.reset(id);
 
@@ -299,6 +316,10 @@ public class WebViewActivity extends Activity {
 
     public void loadWebPage(String gamePath, int id) {
         Log.d(TAG, "WebViewActivity.loadWebPage");
+
+        if (htmlGameView == null) {
+            return;
+        }
 
         webViewEventListener.reset(id);
         webViewChromeClient.reset(id);
@@ -364,6 +385,10 @@ public class WebViewActivity extends Activity {
     public void acceptTouchEvents(int accept) {
         Log.d(TAG, "WebViewActivity.acceptTouchEvents accept = " + accept);
 
+        if (htmlGameView == null) {
+            return;
+        }
+
         removeTouchInterceptorView();
         if (accept != 0) {
             addTouchInterceptorView();
@@ -373,21 +398,28 @@ public class WebViewActivity extends Activity {
     public void changeVisibility(int visible) {
         Log.d(TAG, "WebViewActivity.changeVisibility visible = " + visible);
 
+        if (htmlGameView == null) {
+            return;
+        }
+
         boolean isWebViewVisible = (visible != 0);
         htmlGameView.setVisibility(isWebViewVisible ? View.VISIBLE : View.GONE);
 
-        if (!isWebViewVisible) {
-            htmlGameView.goBack();
-            removeTouchInterceptorView();
+        if (isTouchInterceptorViewActive()) {
+            touchInterceptorView.setVisibility(isWebViewVisible ? View.VISIBLE : View.GONE);
         }
     }
 
     public boolean isWebViewVisible() {
-        return htmlGameView.getVisibility() == View.VISIBLE;
+        return htmlGameView != null && htmlGameView.getVisibility() == View.VISIBLE;
     }
 
     public void centerWebView() {
         Log.d(TAG, "WebViewActivity.centerWebView");
+
+        if (htmlGameView == null) {
+            return;
+        }
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) htmlGameView.getLayoutParams();
         params.gravity = Gravity.CENTER;
@@ -399,6 +431,10 @@ public class WebViewActivity extends Activity {
 
     public void matchScreenSize() {
         Log.d(TAG, "WebViewActivity.matchScreenSize");
+
+        if (htmlGameView == null) {
+            return;
+        }
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,

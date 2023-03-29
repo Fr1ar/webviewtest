@@ -41,6 +41,8 @@ struct HiddenWebViewExtensionState {
 	bool isUsed;
 	int requestId;
 	jobject jniInterface;
+	jmethodID createWebView;
+	jmethodID destroyWebView;
 	jmethodID loadGameMethod;
 	jmethodID loadWebPageMethod;
 	jmethodID executeScriptMethod;
@@ -146,13 +148,27 @@ namespace hiddenWebView {
 		return 0;
 	}
 
-	int platform_Create(lua_State* luaState, hiddenWebView::HiddenWebViewInfo* _info) {
-		webViewMain.webViewInfo = *_info;
+	
+	int platform_Create(lua_State* luaState, hiddenWebView::HiddenWebViewInfo* info) {
+		webViewMain.webViewInfo = *info;
+
+		JNIEnv* env = Attach();
+		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.createWebView);
+		Detach();
 		
 		return 0;
 	}
+	
+	static void DestroyWebView() {
+		JNIEnv* env = Attach();
+		env->CallVoidMethod(webViewMain.jniInterface, webViewMain.destroyWebView);
+		Detach();
+
+		cleanup(&webViewMain.webViewInfo);
+	}
 
 	int platform_Destroy(lua_State* luaState) {
+		DestroyWebView();
 		return 0;
 	}
 
@@ -265,6 +281,8 @@ namespace hiddenWebView {
 		jclass webview_class = (jclass)env->CallObjectMethod(cls, find_class, str_class_name);
 		env->DeleteLocalRef(str_class_name);
 
+		webViewMain.createWebView = env->GetMethodID(webview_class, "createWebView", "()V");
+		webViewMain.destroyWebView = env->GetMethodID(webview_class, "destroyWebView", "()V");
 		webViewMain.loadWebPageMethod = env->GetMethodID(webview_class, "loadWebPage", "(Ljava/lang/String;I)V");
 		webViewMain.loadGameMethod = env->GetMethodID(webview_class, "loadGame", "(Ljava/lang/String;I)V");
 		webViewMain.executeScriptMethod = env->GetMethodID(webview_class, "executeScript", "(Ljava/lang/String;I)V");

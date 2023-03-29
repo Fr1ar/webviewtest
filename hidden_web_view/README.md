@@ -1,5 +1,9 @@
 # Описание работы с hidden_web_view
 
+## Рабочий пример
+Пример работы расширения hidden_web_view для Defold есть тут:
+https://github.com/Fr1ar/webviewtest
+
 ## Предварительная настройка
 
 Для работы расширения необходимо внести в `AndroidManifest.xml` изменения:
@@ -13,14 +17,6 @@
         ...>
 ```
 
-- Назначить прозрачную тему для `DefoldActivity`:
-```xml
-        <activity
-            ...
-            android:name="com.dynamo.android.DefoldActivity"
-            android:theme="@style/Theme.AppCompat.Translucent">
-```
-
 - Добавить meta-data `alpha.transparency` в тэг `application`:
 ```xml
     <application>
@@ -32,10 +28,26 @@
     </application>
 ```
 
-- Добавить саму тему `Theme.AppCompat.Translucent` в файл `themes.xml`:
+- Назначить прозрачную тему для `DefoldActivity`:
+```xml
+        <activity
+            ...
+            android:name="com.dynamo.android.DefoldActivity"
+            android:theme="@style/Theme.DefoldActivity">
+```
+
+- Назначить тему для `WebViewActivity`:
+```xml
+        <activity
+            ...
+            android:name="com.blitz.hiddenwebview.WebViewActivity"
+            android:theme="@style/Theme.WebViewActivity">
+```
+
+- Добавить сами темы в файл `themes.xml`:
 ```xml
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.AppCompat.Translucent" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DefoldActivity" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -43,7 +55,11 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
-</resources>
+    <style name="Theme.WebViewActivity" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources> 
 ```
 
 - Добавить зависимость в `build.gradle`:
@@ -77,13 +93,17 @@ function on_html_loaded()
         }
     }
     
-    local param_string = json.encode(params)
-    local touch_area_height = 0.6
-    hidden_web_view.set_touch_interceptor_area(0, 0, 1.0, touch_area_height)
+    local x = 0
+    local y = 0.3
+    local width = 1
+    local height = 0.6
+    hidden_web_view.set_touch_interceptor_area(x, y, width, height)
 
+    local param_string = json.encode(params)
     local js = "__Start(" .. param_string .. ")"
     print("HiddenWebView execute_script: "..js)
     hidden_web_view.execute_script(js)
+    hidden_web_view.set_accept_touch_events(1)
 end
 
 
@@ -127,8 +147,7 @@ function create_webview()
 
     hidden_web_view.match_screen_size()
 
-    hidden_web_view.change_visibility(1) -- android only - open
-    hidden_web_view.set_debug_enabled(1) -- android only - set debug for chrome
+    hidden_web_view.set_debug_enabled(1) -- android only
 
     hidden_web_view.add_javascript_channel("logging")
     hidden_web_view.add_javascript_channel("_OnNewScore")
@@ -141,6 +160,5 @@ function create_webview()
     hidden_web_view.add_javascript_channel("_OnUX")
     
     hidden_web_view.open_game("main.html")
-    hidden_web_view.set_accept_touch_events(1)
 end
 ```

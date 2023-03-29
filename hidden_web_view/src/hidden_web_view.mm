@@ -179,8 +179,8 @@ static void QueueCommand(hiddenWebView::WebViewCommand* cmd) {
 }
 
 namespace hiddenWebView {
-  int platform_Create(lua_State* L, hiddenWebView::HiddenWebViewInfo* _info) {
-    webViewMain.webViewInfo = *_info;
+  int platform_Create(lua_State* L, hiddenWebView::HiddenWebViewInfo* info) {
+    webViewMain.webViewInfo = *info;
     
     #if defined(DM_PLATFORM_IOS)
     UIScreen* screen = [UIScreen mainScreen];

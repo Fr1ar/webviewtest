@@ -44,6 +44,11 @@
             android:name="android.notch_support"
             android:value="true" />
 
+        <!--
+            Эта настройка есть в Defold только начиная с версии 1.4.6
+            Она включает прозрачность для DefoldActivity
+            https://github.com/defold/defold/pull/7477
+        -->
         <meta-data
             android:name="alpha.transparency"
             android:value="true" />
@@ -54,7 +59,7 @@
             android:launchMode="singleTop"
             android:exported="false"
             android:screenOrientation="{{orientation-support}}"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:theme="@style/Theme.DefoldActivity">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -70,7 +75,7 @@
             android:screenOrientation="{{orientation-support}}"
             android:name="com.blitz.hiddenwebview.WebViewActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@style/Theme.WebViewActivity">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

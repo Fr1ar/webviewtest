@@ -54,13 +54,11 @@ public class ApplicationController extends Application {
             @Override
             public void onActivityStarted(Activity activity) {
                 Log.d(TAG, "Application.onActivityStarted: " + getActivityName(activity));
-                assignActivity(activity);
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
                 Log.d(TAG, "Application.onActivityResumed: " + getActivityName(activity));
-                assignActivity(activity);
             }
 
             @Override
@@ -81,6 +79,7 @@ public class ApplicationController extends Application {
             @Override
             public void onActivityDestroyed(Activity activity) {
                 Log.d(TAG, "Application.onActivityDestroyed: " + getActivityName(activity));
+                releaseActivity(activity);
             }
 
             private void assignActivity(Activity activity) {
@@ -88,6 +87,14 @@ public class ApplicationController extends Application {
                     webViewActivity = (WebViewActivity) activity;
                 } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
                     defoldActivity = activity;
+                }
+            }
+
+            private void releaseActivity(Activity activity) {
+                if (getActivityName(activity).equals(WEBVIEW_ACTIVITY)) {
+                    webViewActivity = null;
+                } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
+                    defoldActivity = null;
                 }
             }
         });

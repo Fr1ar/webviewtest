@@ -100,6 +100,15 @@ function on_webview_callback(id, type, data)
     end
 end
 
+function get_webgl_games_path()
+    local sysinfo = sys.get_sys_info()
+    if sysinfo.system_name == "Android" then
+        return "webGL_games/"
+    else
+        return "assets/webGL_games/"
+    end
+end
+
 function create_webview()
     print("HiddenWebView: STEP 1")
     
@@ -109,12 +118,7 @@ function create_webview()
 
     print("HiddenWebView: STEP 2")
     
-    local sysinfo = sys.get_sys_info()
-    if sysinfo.system_name == "Android" then
-        hidden_web_view.start_server("webGL_games/")
-    else
-        hidden_web_view.start_server("assets/webGL_games/")
-    end
+    hidden_web_view.start_server(get_webgl_games_path())
 
     print("HiddenWebView: STEP 3")
     
@@ -122,8 +126,7 @@ function create_webview()
 
     print("HiddenWebView: STEP 4")
 
-    hidden_web_view.change_visibility(1) -- android only - open
-    hidden_web_view.set_debug_enabled(1) -- android only - set debug for chrome
+    hidden_web_view.set_debug_enabled(1) -- android only
 
     print("HiddenWebView: STEP 5")
 
@@ -140,8 +143,12 @@ function create_webview()
     print("HiddenWebView: STEP 6")
     
     local param_string = json.encode(params)
-    local touch_area_height = 0.6
-    hidden_web_view.set_touch_interceptor_area(0, 0.3, 1, touch_area_height)
+
+    local x = 0
+    local y = 0.3
+    local width = 1
+    local height = 0.6
+    hidden_web_view.set_touch_interceptor_area(x, y, width, height)
 
     print("HiddenWebView: STEP 7")
 
@@ -150,14 +157,24 @@ function create_webview()
     print("HiddenWebView: STEP 8")
 end
 
+function destroy_webview()
+    hidden_web_view.destroy();
+end
+
 function on_input(self, action_id, action)
     
-    dirtylarry:button("initialization", action_id, action, function ()
+    dirtylarry:button("create_webview", action_id, action, function ()
         print("HiddenWebView: Creating webview")
         create_webview()
         print("HiddenWebView: Webview created")
     end)
 
+    dirtylarry:button("destroy_webview", action_id, action, function ()
+        print("HiddenWebView: Destroying webview")
+        destroy_webview()
+        print("HiddenWebView: Webview destroyed")
+    end)
+    
     dirtylarry:button("test", action_id, action, function ()
         print("TEST BUTTON")
     end)
