@@ -63,6 +63,47 @@ function on_html_loaded(game)
     hidden_web_view.set_accept_touch_events(1)
 end
 
+function execute(is_local, method, params)
+    local execute_string = "__Execute(".. tostring(is_local) .. ", '" .. method .. "', " .. params ..")"
+    print(execute_string)
+    hidden_web_view.execute_script(execute_string)
+end
+
+function on_scene_loaded()
+    local params = json.encode({
+        seed = 2296,
+        run_bot = true,
+        type = "Bot",
+        is_master = true,
+        is_first_launch = true,
+        bot_skill = 0.4
+    })
+    execute(true, "__StartGame", "'" .. params .. "'")
+end
+
+function on_js_callback(data)
+    local call_value = json.decode(data.result)
+
+    if data.url == "_OnSceneLoaded" then
+        pprint("HiddenWebView: _OnSceneLoaded")
+        on_scene_loaded()
+    elseif data.url == "_OnNewScore" then
+        pprint("HiddenWebView: _OnNewScore", call_value.params)
+    elseif data.url == "_OnBotScoreOneWorld" then
+        pprint("HiddenWebView: _OnBotScoreOneWorld", call_value.params)
+    elseif data.url == "_OnChangeHealth" then
+        pprint("HiddenWebView: _OnChangeHealth", call_value.params)
+    elseif data.url == "_OnCommand" then
+        pprint("HiddenWebView: _OnCommand", call_value.params)
+    elseif data.url == "_OnGameFinished" then
+        pprint("HiddenWebView: _OnGameFinished")
+    elseif data.url == "_OnConsole" then
+        pprint("HiddenWebView: _OnConsole", call_value.params)
+    elseif data.url == "_OnUX" then
+        pprint("HiddenWebView: _OnUX")
+    end 
+end
+
 function on_webview_callback(game, id, type, data)
     if type == hidden_web_view.CALLBACK_RESULT_GAME_LOADED then
         on_html_loaded(game)
@@ -77,6 +118,7 @@ function on_webview_callback(game, id, type, data)
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_CHANNEL_CALLBACK then
         print("HiddenWebView: JAVASCRIPT_CHANNEL: "..data.url)
         pprint(data)
+        on_js_callback(data)
     else
         print("HiddenWebView: Unknown callback type")
     end
