@@ -71,9 +71,8 @@ dependencies {
 
 - Добавить html/js ресурсы в проект:
     - Открыть файл `game.project`, `Project` -> `Bundle Resources`, задать каталог `/bundle_resources`
-    - Создать каталог `bundle_resources` в корне проекта
-    - Для Android - `/bundle_resources/android/assets/{путь который будет в lua в вызове hidden_web_view.open_game}`
-    - Для IOS/MacOS - `/bundle_resources}/ios/{путь который будет в lua в вызове hidden_web_view.open_game}`
+    - Создать каталоги `bundle_resources/common/assets/` в корне проекта
+    - Положить файлы игры в `/bundle_resources/common/assets/{путь который будет в lua в вызове hidden_web_view.open_game}`
 
 - Пример кода для запуска игры Hoop Rush:
 ```lua
