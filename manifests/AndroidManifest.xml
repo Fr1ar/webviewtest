@@ -75,7 +75,7 @@
             android:screenOrientation="{{orientation-support}}"
             android:name="com.blitz.hiddenwebview.WebViewActivity"
             android:exported="true"
-            android:theme="@style/Theme.WebViewActivity">
+            android:theme="@style/Theme.NoNavigationBar">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

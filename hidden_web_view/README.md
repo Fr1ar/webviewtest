@@ -1,6 +1,7 @@
 # Описание работы с hidden_web_view
 
 ## Рабочий пример
+
 Пример работы расширения hidden_web_view для Defold есть тут:
 https://github.com/Fr1ar/webviewtest
 
@@ -41,7 +42,7 @@ https://github.com/Fr1ar/webviewtest
         <activity
             ...
             android:name="com.blitz.hiddenwebview.WebViewActivity"
-            android:theme="@style/Theme.WebViewActivity">
+            android:theme="@style/Theme.NoNavigationBar">
 ```
 
 - Добавить сами темы в файл `themes.xml`:
@@ -55,7 +56,7 @@ https://github.com/Fr1ar/webviewtest
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
-    <style name="Theme.WebViewActivity" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+    <style name="Theme.NoNavigationBar" parent="@android:style/Theme.NoTitleBar.Fullscreen">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
@@ -74,13 +75,13 @@ dependencies {
     - Создать каталоги `bundle_resources/common/assets/` в корне проекта
     - Положить файлы игры в `/bundle_resources/common/assets/{путь который будет в lua в вызове hidden_web_view.open_game}`
 
-- Пример кода для запуска игры Hoop Rush:
+- Пример кода для инициализации игры:
 ```lua
-function on_html_loaded()
-    print("HiddenWebView: on_html_loaded")
+function on_html_loaded(game)
+    print("HiddenWebView: on_html_loaded: "..game)
     
     local params = {
-        game_url = "hoopRush" .. "/index.html",
+        game_url = game .. "/index.html",
         has_remote_view = false,
         local_instance = {
             pos = {
@@ -92,12 +93,6 @@ function on_html_loaded()
         }
     }
     
-    local x = 0
-    local y = 0.3
-    local width = 1
-    local height = 0.6
-    hidden_web_view.set_touch_interceptor_area(x, y, width, height)
-
     local param_string = json.encode(params)
     local js = "__Start(" .. param_string .. ")"
     print("HiddenWebView execute_script: "..js)
@@ -105,47 +100,83 @@ function on_html_loaded()
     hidden_web_view.set_accept_touch_events(1)
 end
 
-
-function on_js_callback(data)
-    pprint("HiddenWebView: on_js_callback", data)
+function execute(is_local, method, params)
+    local execute_string = "__Execute(".. tostring(is_local) .. ", '" .. method .. "', " .. params ..")"
+    print(execute_string)
+    hidden_web_view.execute_script(execute_string)
 end
 
-function on_webview_callback(id, type, data)
-    print("HiddenWebView: on_webview_callback", type)
+function on_scene_loaded()
+    local params = json.encode({
+        seed = 2296,
+        run_bot = true,
+        type = "Bot",
+        is_master = true,
+        is_first_launch = true,
+        bot_skill = 0.4
+    })
+    execute(true, "__StartGame", "'" .. params .. "'")
+end
 
+function on_js_callback(data)
+    local call_value = json.decode(data.result)
+
+    if data.url == "_OnSceneLoaded" then
+        pprint("HiddenWebView: _OnSceneLoaded")
+        on_scene_loaded()
+    elseif data.url == "_OnNewScore" then
+        pprint("HiddenWebView: _OnNewScore", call_value.params)
+    elseif data.url == "_OnBotScoreOneWorld" then
+        pprint("HiddenWebView: _OnBotScoreOneWorld", call_value.params)
+    elseif data.url == "_OnChangeHealth" then
+        pprint("HiddenWebView: _OnChangeHealth", call_value.params)
+    elseif data.url == "_OnCommand" then
+        pprint("HiddenWebView: _OnCommand", call_value.params)
+    elseif data.url == "_OnGameFinished" then
+        pprint("HiddenWebView: _OnGameFinished")
+    elseif data.url == "_OnConsole" then
+        pprint("HiddenWebView: _OnConsole", call_value.params)
+    elseif data.url == "_OnUX" then
+        pprint("HiddenWebView: _OnUX")
+    end 
+end
+
+function on_webview_callback(game, id, type, data)
     if type == hidden_web_view.CALLBACK_RESULT_GAME_LOADED then
-        on_html_loaded()
+        on_html_loaded(game)
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_LOADING then
-        print("HiddenWebView: CALLBACK_RESULT_GAME_LOADING")
+        print("HiddenWebView: GAME_LOADING")
     elseif type == hidden_web_view.CALLBACK_RESULT_GAME_ERROR then
-        print("HiddenWebView: CALLBACK_RESULT_GAME_ERROR")
+        print("HiddenWebView: GAME_ERROR")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_OK then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_OK")
+        print("HiddenWebView: JAVASCRIPT_OK")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_ERROR then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_ERROR")
-        pprint(data)
+        print("HiddenWebView: JAVASCRIPT_ERROR")
     elseif type == hidden_web_view.CALLBACK_RESULT_JAVASCRIPT_CHANNEL_CALLBACK then
-        print("HiddenWebView: CALLBACK_RESULT_JAVASCRIPT_CHANNEL_CALLBACK:")
+        print("HiddenWebView: JAVASCRIPT_CHANNEL: "..data.url)
+        pprint(data)
         on_js_callback(data)
     else
         print("HiddenWebView: Unknown callback type")
     end
 end
 
-function create_webview()
-    local instance = hidden_web_view.create(function(self_, id, type, data)
-        on_webview_callback(id, type, data)
-    end)
-    
+function get_webgl_games_path()
     local sysinfo = sys.get_sys_info()
     if sysinfo.system_name == "Android" then
-        hidden_web_view.start_server("webGL_games/")
+        return "webGL_games/"
     else
-        hidden_web_view.start_server("assets/webGL_games/")
+        return "assets/webGL_games/"
     end
+end
 
+function create_webview(game)
+    local instance = hidden_web_view.create(function(self_, id, type, data)
+        on_webview_callback(game, id, type, data)
+    end)
+
+    hidden_web_view.start_server(get_webgl_games_path())
     hidden_web_view.match_screen_size()
-
     hidden_web_view.set_debug_enabled(1) -- android only
 
     hidden_web_view.add_javascript_channel("logging")
@@ -158,6 +189,28 @@ function create_webview()
     hidden_web_view.add_javascript_channel("_OnConsole")
     hidden_web_view.add_javascript_channel("_OnUX")
     
+    local param_string = json.encode(params)
+
+    local x = 0
+    local y = 0.3
+    local width = 1
+    local height = 0.6
+    hidden_web_view.set_touch_interceptor_area(x, y, width, height)
+
     hidden_web_view.open_game("main.html")
 end
+
+function destroy_webview()
+    hidden_web_view.destroy();
+end
+```
+
+- Запускаем игру Hoop Rush:
+```lua
+create_webview("hoopRush")
+```
+
+- Удаляем webview:
+```lua
+destroy_webview()
 ```

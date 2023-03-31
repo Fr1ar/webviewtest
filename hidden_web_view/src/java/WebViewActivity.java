@@ -2,7 +2,10 @@ package com.blitz.hiddenwebview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
@@ -81,12 +84,38 @@ public class WebViewActivity extends Activity {
     private native void onScriptCallback(String type, String payload);
 
 
+    protected void openWebViewActivity() {
+        openActivity(ApplicationController.WEBVIEW_ACTIVITY);
+    }
+
     protected void openDefoldActivity() {
         openActivity(ApplicationController.DEFOLD_ACTIVITY);
     }
 
-    protected void openWebViewActivity() {
-        openActivity(ApplicationController.WEBVIEW_ACTIVITY);
+    protected void openDeepLinksActivity() {
+        openActivity(ApplicationController.DEEPLINKS_ACTIVITY);
+    }
+
+    protected boolean isDeepLinksActivityFound() {
+        try {
+            PackageManager pm = getPackageManager();
+            String packageName = getPackageName();
+            ComponentName componentName = new ComponentName(packageName,
+                    ApplicationController.DEEPLINKS_ACTIVITY);
+            ActivityInfo info = pm.getActivityInfo(componentName, 0);
+            return info != null;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    protected void openMainActivity() {
+        if (isDeepLinksActivityFound()) {
+            openDeepLinksActivity();
+        } else {
+            openDefoldActivity();
+        }
     }
 
     protected WebViewActivity getWebViewActivity() {
@@ -120,7 +149,7 @@ public class WebViewActivity extends Activity {
 
         createWebViewContainer();
 
-        openDefoldActivity();
+        openMainActivity();
     }
 
     @Override
@@ -161,7 +190,8 @@ public class WebViewActivity extends Activity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            layoutParams.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             window.setAttributes(layoutParams);
         }
     }
@@ -480,7 +510,7 @@ public class WebViewActivity extends Activity {
         }
 
         if (action.equals(Intent.ACTION_MAIN)) {
-            openDefoldActivity();
+            openMainActivity();
         } else {
             super.onNewIntent(intent);
         }

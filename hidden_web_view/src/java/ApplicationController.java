@@ -16,11 +16,15 @@ public class ApplicationController extends Application {
     protected WebViewActivity webViewActivity;
     protected Activity defoldActivity;
 
+    protected Activity deepLinksActivity;
+
     /**
      * Названия классов Activity
      */
     public static final String DEFOLD_ACTIVITY = "com.dynamo.android.DefoldActivity";
     public static final String WEBVIEW_ACTIVITY = "com.blitz.hiddenwebview.WebViewActivity";
+
+    public static final String DEEPLINKS_ACTIVITY = "com.defold.iac.IACLauncherActivity";
 
     public static String getActivityName(Activity activity) {
         return activity.getClass().getName();
@@ -87,6 +91,8 @@ public class ApplicationController extends Application {
                     webViewActivity = (WebViewActivity) activity;
                 } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
                     defoldActivity = activity;
+                } else if (getActivityName(activity).equals(DEEPLINKS_ACTIVITY)) {
+                    deepLinksActivity = activity;
                 }
             }
 
@@ -95,6 +101,8 @@ public class ApplicationController extends Application {
                     webViewActivity = null;
                 } else if (getActivityName(activity).equals(DEFOLD_ACTIVITY)) {
                     defoldActivity = null;
+                } else if (getActivityName(activity).equals(DEEPLINKS_ACTIVITY)) {
+                    deepLinksActivity = null;
                 }
             }
         });
